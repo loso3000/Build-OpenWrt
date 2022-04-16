@@ -99,6 +99,6 @@ sed -i -e 's?\.\./\.\./luci.mk?$(TOPDIR)/feeds/luci/luci.mk?' diy/zhuxiaole/*/Ma
 chmod +x $GITHUB_WORKSPACE/devices/common/convert-translation.sh
 bash $GITHUB_WORKSPACE/devices/common/convert-translation.sh -a >/dev/null 2>&1
 
-sed -i 's|src-git-full packages https://github.com/x-wrt/packages.git|src-link packages ../diy/packages|' feeds.conf.default
-sed -i 's|src-git-full luci https://github.com/x-wrt/luci.git|src-link luci ../diy/luci|' feeds.conf.default
-echo 'src-link zhuxiaole ../diy/zhuxiaole' >>feeds.conf.default
+sed -i 's|src-git-full packages https://github.com/x-wrt/packages.git|src-link packages $GITHUB_WORKSPACE/openwrt/diy/packages|' feeds.conf.default
+sed -i 's|src-git-full luci https://github.com/x-wrt/luci.git|src-link luci $GITHUB_WORKSPACE/openwrt/diy/luci|' feeds.conf.default
+echo 'src-link zhuxiaole $GITHUB_WORKSPACE/openwrt/diy/zhuxiaole' >>feeds.conf.default
