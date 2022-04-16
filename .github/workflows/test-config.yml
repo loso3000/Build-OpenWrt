@@ -22,10 +22,6 @@ on:
         description: 'build target'
         required: false
         default: 'x86_64'
-      branch:
-        description: 'repo branch'
-        required: false
-        default: 'master'
 
 env:
   TZ: Asia/Shanghai
@@ -34,11 +30,10 @@ jobs:
   build:
     runs-on: ubuntu-20.04
     
-    name: ${{matrix.target}} ${{matrix.branch}}
+    name: ${{matrix.target}}
     strategy:
       fail-fast: false
       matrix:
-        branch: ["${{ github.event.inputs.branch }}"]
         target: ["${{ github.event.inputs.target }}"]
 
     steps:
@@ -51,8 +46,7 @@ jobs:
         if [ -f "devices/${{matrix.target}}/settings.ini" ]; then
           source "devices/${{matrix.target}}/settings.ini"
         fi
-        echo "BUILD_TARGET=${{matrix.target}}" >> $GITHUB_ENV
-        echo "REPO_BRANCH=${{matrix.branch}}" >> $GITHUB_ENV
+        echo "REPO_BRANCH=${REPO_BRANCH}" >> $GITHUB_ENV
         echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
         echo "FEEDS_CONF=${FEEDS_CONF}" >> $GITHUB_ENV
         echo "CONFIG_FILE=${CONFIG_FILE}" >> $GITHUB_ENV
@@ -86,17 +80,17 @@ jobs:
 
     - name: Load custom feeds
       run: |
-        if [ -e devices/$BUILD_TARGET/$FEEDS_CONF ]
+        if [ -e devices/${{matrix.target}}/$FEEDS_CONF ]
         then
-          mv devices/$BUILD_TARGET/$FEEDS_CONF openwrt/feeds.conf.default
+          mv devices/${{matrix.target}}/$FEEDS_CONF openwrt/feeds.conf.default
         fi
         cd openwrt
         chmod +x $GITHUB_WORKSPACE/devices/common/$DIY_P1_SH
         $GITHUB_WORKSPACE/devices/common/$DIY_P1_SH
-        if [ -e $GITHUB_WORKSPACE/devices/$BUILD_TARGET/$DIY_P1_SH ]
+        if [ -e $GITHUB_WORKSPACE/devices/${{matrix.target}}/$DIY_P1_SH ]
         then
-          chmod +x $GITHUB_WORKSPACE/devices/$BUILD_TARGET/$DIY_P1_SH
-          $GITHUB_WORKSPACE/devices/$BUILD_TARGET/$DIY_P1_SH
+          chmod +x $GITHUB_WORKSPACE/devices/${{matrix.target}}/$DIY_P1_SH
+          $GITHUB_WORKSPACE/devices/${{matrix.target}}/$DIY_P1_SH
         fi
 
     - name: Update feeds
@@ -111,17 +105,17 @@ jobs:
         then
           mv files openwrt/files
         fi
-        if [ -e devices/$BUILD_TARGET/$CONFIG_FILE ]
+        if [ -e devices/${{matrix.target}}/$CONFIG_FILE ]
         then
-          mv devices/$BUILD_TARGET/$CONFIG_FILE openwrt/.config
+          mv devices/${{matrix.target}}/$CONFIG_FILE openwrt/.config
         fi
         cd openwrt
         chmod +x $GITHUB_WORKSPACE/devices/common/$DIY_P2_SH
         $GITHUB_WORKSPACE/devices/common/$DIY_P2_SH
-        if [ -e $GITHUB_WORKSPACE/devices/$BUILD_TARGET/$DIY_P2_SH ]
+        if [ -e $GITHUB_WORKSPACE/devices/${{matrix.target}}/$DIY_P2_SH ]
         then
-          chmod +x $GITHUB_WORKSPACE/devices/$BUILD_TARGET/$DIY_P2_SH
-          $GITHUB_WORKSPACE/devices/$BUILD_TARGET/$DIY_P2_SH
+          chmod +x $GITHUB_WORKSPACE/devices/${{matrix.target}}/$DIY_P2_SH
+          $GITHUB_WORKSPACE/devices/${{matrix.target}}/$DIY_P2_SH
         fi
         
     - name: SSH connection to Actions
