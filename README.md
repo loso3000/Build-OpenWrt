@@ -1,2 +1,2 @@
 # Build-OpenWrt
-build my openwrt
+Build My OpenWrt
