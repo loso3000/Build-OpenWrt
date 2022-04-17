@@ -15,11 +15,16 @@ sed -i 's|https://github.com/x-wrt/packages.git|https://github.com/zhuxiaole/x-w
 sed -i 's|https://github.com/x-wrt/luci.git|https://github.com/zhuxiaole/x-wrt-luci.git|' feeds.conf.default
 echo 'src-git zhuxiaole https://github.com/zhuxiaole/my-packages-for-x-wrt' >>feeds.conf.default
 
+#添加shortcut-fe
+git_sparse_clone master "https://github.com/coolsnowwolf/lede" "package/kernel/fast_classifier_pkg" package/lean/shortcut-fe/fast-classifier
+git_sparse_clone master "https://github.com/coolsnowwolf/lede" "package/kernel/shortcut_fe_pkg" package/lean/shortcut-fe/shortcut-fe
+git_sparse_clone master "https://github.com/coolsnowwolf/lede" "package/kernel/simulated_driver_pkg" package/lean/shortcut-fe/simulated-driver
+
 #添加fullconenat
-rm -rf package/network/config/firewall
-git_sparse_clone openwrt-21.02 "https://github.com/immortalwrt/immortalwrt" "package/network/config/firewall_pkg" package/network/config/firewall
-git clone --depth 1 -b dev https://github.com/llccd/openwrt-fullconenat package/network/utils/fullconenat
 git_sparse_clone openwrt-18.06 "https://github.com/immortalwrt/immortalwrt" "target/linux/generic/hack-4.19/patch_952" target/linux/generic/hack-4.19/952-net-conntrack-events-support-multiple-registrant.patch
 git_sparse_clone master "https://github.com/coolsnowwolf/lede" "target/linux/generic/hack-5.10/patch_952" target/linux/generic/hack-5.10/952-net-conntrack-events-support-multiple-registrant.patch
 git_sparse_clone master "https://github.com/coolsnowwolf/lede" "target/linux/generic/hack-5.15/patch_952" target/linux/generic/hack-5.15/952-add-net-conntrack-events-support-multiple-registrant.patch
 git_sparse_clone master "https://github.com/coolsnowwolf/lede" "target/linux/generic/hack-5.4/patch_952" target/linux/generic/hack-5.4/952-net-conntrack-events-support-multiple-registrant.patch
+rm -rf package/network/config/firewall
+git_sparse_clone openwrt-21.02 "https://github.com/immortalwrt/immortalwrt" "package/network/config/firewall_pkg" package/network/config/firewall
+git clone --depth 1 -b dev https://github.com/llccd/openwrt-fullconenat package/network/utils/fullconenat
