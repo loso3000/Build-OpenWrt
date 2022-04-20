@@ -1,0 +1,29 @@
+--- ../root/etc/init.d/wizard	2022-04-18 20:23:54.464215158 +0800
++++ ../root/etc/init.d/wizard	2022-04-18 20:23:32.517215524 +0800
+@@ -57,7 +57,6 @@
+ 	config_get lan_dns "$cfg" lan_dns
+ 	config_get ipv6 "$cfg" ipv6
+ 	config_get old_ipv6 "$cfg" old_ipv6
+-	config_get autoupgrade_pkg "$cfg" autoupgrade_pkg
+ 	
+ 	[ "$dhcp" == "0" ] && dhcp="1"
+ 	if [[ "${lan_gateway}" != "$(uci -q get network.lan.gateway)" ||  "${dhcp}" != "$(uci -q get dhcp.lan.ignore)" ]]; then
+@@ -111,17 +110,7 @@
+ 	uci commit network
+ 	(
+ 	 /etc/init.d/network restart
+-	 /etc/init.d/dnsmasq reload)&
+-	
+-	if [ "${autoupgrade_pkg}" != "1" ]; then
+-		sed -i '/opkg-upgrade/d' /etc/crontabs/root
+-	else
+-		grep -q "opkg-upgrade" /etc/crontabs/root || {
+-			hour="$(grep -m1 -ao '[4-6]' /dev/urandom | head -n1)"
+-			min="$(grep -m1 -ao '[0-5][0-9]' /dev/urandom | head -n1)"
+-			echo "$min $hour * * * . /etc/hotplug.d/online/51-opkg-upgrade >/dev/null 2>&1" >> /etc/crontabs/root
+-		}
+-	fi
++	 /etc/init.d/dnsmasq reload)
+ }
+ 
+ reconfig() {

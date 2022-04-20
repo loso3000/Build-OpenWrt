@@ -1,0 +1,15 @@
+--- ../htdocs/luci-static/resources/view/wizard/initsetup.js	2022-04-18 20:13:27.282226462 +0800
++++ ../htdocs/luci-static/resources/view/wizard/initsetup.js	2022-04-18 20:15:58.458223572 +0800
+@@ -70,12 +70,6 @@
+ 		o.default = o.enabled;
+ 		
+ 		s.tab('firmware', _('Firmware Settings'));
+-
+-		o = s.taboption('firmware', form.Flag, 'autoupgrade_pkg', _('Packages Auto Upgrade'),_('谨慎开启'));
+-		o.rmempty = false;
+-
+-		o = s.taboption('firmware', form.Flag, 'autoupgrade_fm', _('Firmware Upgrade Notice'));
+-		o.default = o.enabled;
+ 		
+ 		o = s.taboption('firmware', form.Flag, 'coremark', _('CoreMark'),_('第一次开机后是否运行CPU跑分测试'));
+ 		o.rmempty = false;
