@@ -27,6 +27,8 @@ rm -rf feeds/packages/net/*/.github
 rm -rf feeds/packages/net/*/.gitignore
 
 
+rm -rf feeds/luci/applications/luci-app-wol
+
 rm -rf feeds/luci/applications/luci-app-nft-qos
 git_sparse_clone openwrt-21.02 "https://github.com/immortalwrt/luci" "feeds/luci/applications/nft_qos_luci" applications/luci-app-nft-qos
 
