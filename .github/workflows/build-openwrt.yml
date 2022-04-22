@@ -12,16 +12,7 @@ name: Build OpenWrt
 
 on:
   repository_dispatch:
-  workflow_dispatch:
-    inputs:
-      branch:
-        description: 'repo branch or tag'
-        required: true
-        default: 'master'
-      target:
-        description: 'build target'
-        required: true
-        default: 'x86_64'
+
 env:
   TZ: Asia/Shanghai
 
@@ -29,12 +20,12 @@ jobs:
   build:
     runs-on: ubuntu-20.04
 
-    name: ${{matrix.target}} ${{matrix.branch}}
+    name: Build ${{matrix.target}} ${{matrix.branch}}
     strategy:
       fail-fast: false
       matrix:
-        branch: ["${{ github.event.inputs.branch }}"]
-        target: ["${{ github.event.inputs.target }}"]
+        branch: ["${{ github.event.client_payload.branch }}"]
+        target: ["${{ github.event.client_payload.target }}"]
 
     steps:
     - name: Checkout
