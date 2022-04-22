@@ -183,10 +183,20 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-        echo "::set-output name=release_tag::${{matrix.target}}_${{matrix.branch}}_p$(date +"%Y%m%d%H%M")"
+        echo "::set-output name=release_tag::${{matrix.target}}_${{matrix.branch}}"
         touch release.txt
         echo -e `curl "https://api.github.com/repos/x-wrt/build-release/releases/tags/v${{matrix.branch}}" | jq '.body' | sed 's/\"//g' | sed 's/\\r\\n/\\n/g'` >> release.txt
         echo "::set-output name=status::success"
+        
+    - name: Remove same tag Releases
+      uses: dev-drprasad/delete-older-releases@v0.2.0
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      with:
+        keep_latest: 0
+        delete_tags: true
+        delete_tag_pattern: ${{ steps.tag.outputs.release_tag }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload firmware to release
       uses: softprops/action-gh-release@v1
