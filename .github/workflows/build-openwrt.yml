@@ -20,7 +20,7 @@ jobs:
   build:
     runs-on: ubuntu-20.04
 
-    name: Build Firmware
+    name: Build ${{ github.event.client_payload.target }} ${{ github.event.client_payload.branch }}
     strategy:
       fail-fast: false
       matrix:
