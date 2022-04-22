@@ -37,4 +37,4 @@ jobs:
       with:
         token: ${{ secrets.ACTIONS_TRIGGER_PAT }}
         event-type: manual build ${{ github.event.inputs.target }} ${{ github.event.inputs.branch }}
-        client_payload: '{"branch": "${{ github.event.inputs.branch }}", "target": "${{ github.event.inputs.target }}"}'
+        client-payload: '{"branch": "${{ github.event.inputs.branch }}", "target": "${{ github.event.inputs.target }}"}'
