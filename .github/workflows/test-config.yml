@@ -20,7 +20,7 @@ on:
       branch:
         description: 'repo branch or tag'
         required: true
-        default: 'master'
+        default: '22.03_b202204150415'
       target:
         description: 'build target'
         required: true
