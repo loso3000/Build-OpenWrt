@@ -83,6 +83,13 @@ mkdir -p feeds/luci/modules/luci-base/patches
 cp $GITHUB_WORKSPACE/xwrt/devices/common/patches/luci-base/* feeds/luci/modules/luci-base/patches
 
 
+sed -i "/\$DISTRIB_ID/a\sed -i '/DISTRIB_GITHUB/d' /etc/openwrt_release" feeds/x/base-config-setting/files/uci.defaults
+sed -i "/DISTRIB_GITHUB/a\echo \"DISTRIB_GITHUB=\'https://github.com/zhuxiaole/Build-OpenWrt\'\" >> /etc/openwrt_release" feeds/x/base-config-setting/files/uci.defaults
+sed -i "/\$DISTRIB_ID/a\sed -i '/DISTRIB_VERSIONS/d' /etc/openwrt_release" feeds/x/base-config-setting/files/uci.defaults
+sed -i "/DISTRIB_VERSIONS/a\echo \"DISTRIB_VERSIONS=\'${REPO_BRANCH}\'\" >> /etc/openwrt_release" feeds/x/base-config-setting/files/uci.defaults
+sed -i "/\$DISTRIB_ID/a\sed -i '/DISTRIB_MY_TARGET/d' /etc/openwrt_release" feeds/x/base-config-setting/files/uci.defaults
+sed -i "/DISTRIB_MY_TARGET/a\echo \"DISTRIB_MY_TARGET=\'${MY_TARGET}\'\" >> /etc/openwrt_release" feeds/x/base-config-setting/files/uci.defaults
+
 rm -rf feeds/x/luci-app-wizard
 git_sparse_clone master "https://github.com/kiddin9/openwrt-packages" "feeds/x/wizard_luci" luci-app-wizard
 mkdir -p feeds/x/luci-app-wizard/patches
