@@ -83,6 +83,9 @@ mkdir -p feeds/luci/modules/luci-base/patches
 cp $GITHUB_WORKSPACE/xwrt/devices/common/patches/luci-base/* feeds/luci/modules/luci-base/patches
 
 
+sed -i "s|dropbear.@dropbear[0].PasswordAuth='off'|dropbear.@dropbear[0].PasswordAuth='on'|g" feeds/x/base-config-setting/files/uci.defaults
+sed -i "s|dropbear.@dropbear[0].RootPasswordAuth='off'|dropbear.@dropbear[0].RootPasswordAuth='on'|g" feeds/x/base-config-setting/files/uci.defaults
+
 sed -i "/\$DISTRIB_ID/a\sed -i '/DISTRIB_GITHUB/d' /etc/openwrt_release" feeds/x/base-config-setting/files/uci.defaults
 sed -i "/DISTRIB_GITHUB/a\echo \"DISTRIB_GITHUB=\'https://github.com/zhuxiaole/Build-OpenWrt\'\" >> /etc/openwrt_release" feeds/x/base-config-setting/files/uci.defaults
 sed -i "/\$DISTRIB_ID/a\sed -i '/DISTRIB_VERSIONS/d' /etc/openwrt_release" feeds/x/base-config-setting/files/uci.defaults
