@@ -13,7 +13,7 @@ function index()
 
 	local page
 
-	page = entry({"admin", "system", "natcapd_sys"}, cbi("natcap/natcapd_sys"), _("Fast Forwarding Options"))
+	page = entry({"admin", "services", "natcapd_sys"}, cbi("natcap/natcapd_sys"), _("Fast NAT Forwarding"))
 	page.i18n = "natcap"
 	page.dependent = true
 	page.acl_depends = { "luci-app-natcap" }

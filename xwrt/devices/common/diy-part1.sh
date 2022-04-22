@@ -97,11 +97,11 @@ cp $GITHUB_WORKSPACE/xwrt/devices/common/patches/luci-app-wizard/* feeds/x/luci-
 
 rm -rf feeds/x/luci-app-natcap/files/luci/controller/natcap.lua
 cp $GITHUB_WORKSPACE/xwrt/devices/common/packages/luci-app-natcap/natcap.lua feeds/x/luci-app-natcap/files/luci/controller/
-sed -i 's|Map("natcapd", luci.xml.pcdata(translate("Advanced Options")))|Map("natcapd", luci.xml.pcdata(translate("Fast Forwarding Options")))|g' feeds/x/luci-app-natcap/files/luci/model/cbi/natcap/natcapd_sys.lua
+sed -i 's|Map("natcapd", luci.xml.pcdata(translate("Advanced Options")))|Map("natcapd", luci.xml.pcdata(translate("Fast NAT Forwarding")))|g' feeds/x/luci-app-natcap/files/luci/model/cbi/natcap/natcapd_sys.lua
 sed -i 's|s:tab("system", translate("System Settings"))|-- s:tab("system", translate("System Settings"))|g' feeds/x/luci-app-natcap/files/luci/model/cbi/natcap/natcapd_sys.lua
 sed -i 's|s:taboption("system", Flag,|s:option(Flag,|g' feeds/x/luci-app-natcap/files/luci/model/cbi/natcap/natcapd_sys.lua
-echo -e '\nmsgid "Fast Forwarding Options"' >>feeds/x/luci-app-natcap/files/luci/i18n/natcap.zh-cn.po
-echo -e 'msgstr "转发加速选项"' >>feeds/x/luci-app-natcap/files/luci/i18n/natcap.zh-cn.po
+echo -e '\nmsgid "Fast NAT Forwarding"' >>feeds/x/luci-app-natcap/files/luci/i18n/natcap.zh-cn.po
+echo -e 'msgstr "NAT转发加速"' >>feeds/x/luci-app-natcap/files/luci/i18n/natcap.zh-cn.po
 
 rm -rf feeds/x/*/.git
 rm -rf feeds/x/*/.gitattributes
