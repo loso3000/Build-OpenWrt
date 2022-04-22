@@ -33,9 +33,9 @@ jobs:
       
     - name: Load Settings.ini
       run: |
-        source "devices/common/settings.ini"
-        if [ -f "devices/${{matrix.target}}/settings.ini" ]; then
-          source "devices/${{matrix.target}}/settings.ini"
+        source "xwrt/devices/common/settings.ini"
+        if [ -f "xwrt/devices/${{matrix.target}}/settings.ini" ]; then
+          source "xwrt/devices/${{matrix.target}}/settings.ini"
         fi
         echo "REPO_BRANCH=${{matrix.branch}}" >> $GITHUB_ENV
         echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
@@ -72,13 +72,13 @@ jobs:
 
     - name: Load custom feeds
       run: |
-        if [ -e devices/${{matrix.target}}/$FEEDS_CONF ]
+        if [ -e xwrt/devices/${{matrix.target}}/$FEEDS_CONF ]
         then
-          mv -f devices/${{matrix.target}}/$FEEDS_CONF openwrt/feeds.conf.default
+          mv -f xwrt/devices/${{matrix.target}}/$FEEDS_CONF openwrt/feeds.conf.default
         else
-          if [ -e devices/common/$FEEDS_CONF ]
+          if [ -e xwrt/devices/common/$FEEDS_CONF ]
           then
-            mv -f devices/common/$FEEDS_CONF openwrt/feeds.conf.default
+            mv -f xwrt/devices/common/$FEEDS_CONF openwrt/feeds.conf.default
           fi
         fi
 
@@ -88,12 +88,12 @@ jobs:
     - name: Modify feeds
       run: |
         cd openwrt
-        chmod +x $GITHUB_WORKSPACE/devices/common/$DIY_P1_SH
-        $GITHUB_WORKSPACE/devices/common/$DIY_P1_SH
-        if [ -e $GITHUB_WORKSPACE/devices/${{matrix.target}}/$DIY_P1_SH ]
+        chmod +x $GITHUB_WORKSPACE/xwrt/devices/common/$DIY_P1_SH
+        $GITHUB_WORKSPACE/xwrt/devices/common/$DIY_P1_SH
+        if [ -e $GITHUB_WORKSPACE/xwrt/devices/${{matrix.target}}/$DIY_P1_SH ]
         then
-          chmod +x $GITHUB_WORKSPACE/devices/${{matrix.target}}/$DIY_P1_SH
-          $GITHUB_WORKSPACE/devices/${{matrix.target}}/$DIY_P1_SH
+          chmod +x $GITHUB_WORKSPACE/xwrt/devices/${{matrix.target}}/$DIY_P1_SH
+          $GITHUB_WORKSPACE/xwrt/devices/${{matrix.target}}/$DIY_P1_SH
         fi
 
     - name: Install feeds
@@ -101,17 +101,17 @@ jobs:
 
     - name: Load custom configuration
       run: |
-        if [ -e devices/${{matrix.target}}/$CONFIG_FILE ]
+        if [ -e xwrt/devices/${{matrix.target}}/$CONFIG_FILE ]
         then
-          mv -f devices/${{matrix.target}}/$CONFIG_FILE openwrt/.config
+          mv -f xwrt/devices/${{matrix.target}}/$CONFIG_FILE openwrt/.config
         fi
         cd openwrt
-        chmod +x $GITHUB_WORKSPACE/devices/common/$DIY_P2_SH
-        $GITHUB_WORKSPACE/devices/common/$DIY_P2_SH
-        if [ -e $GITHUB_WORKSPACE/devices/${{matrix.target}}/$DIY_P2_SH ]
+        chmod +x $GITHUB_WORKSPACE/xwrt/devices/common/$DIY_P2_SH
+        $GITHUB_WORKSPACE/xwrt/devices/common/$DIY_P2_SH
+        if [ -e $GITHUB_WORKSPACE/xwrt/devices/${{matrix.target}}/$DIY_P2_SH ]
         then
-          chmod +x $GITHUB_WORKSPACE/devices/${{matrix.target}}/$DIY_P2_SH
-          $GITHUB_WORKSPACE/devices/${{matrix.target}}/$DIY_P2_SH
+          chmod +x $GITHUB_WORKSPACE/xwrt/devices/${{matrix.target}}/$DIY_P2_SH
+          $GITHUB_WORKSPACE/xwrt/devices/${{matrix.target}}/$DIY_P2_SH
         fi
 
     - name: Download package
