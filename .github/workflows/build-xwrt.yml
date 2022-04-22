@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: Build OpenWrt
+name: Build XWrt
 
 on:
   repository_dispatch:
@@ -183,7 +183,7 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-        echo "::set-output name=release_tag::${{matrix.target}}_${{matrix.branch}}"
+        echo "::set-output name=release_tag::XWrt|${{matrix.target}}|${{matrix.branch}}"
         touch release.txt
         echo -e `curl "https://api.github.com/repos/x-wrt/build-release/releases/tags/v${{matrix.branch}}" | jq '.body' | sed 's/\"//g' | sed 's/\\r\\n/\\n/g'` >> release.txt
         echo "::set-output name=status::success"
