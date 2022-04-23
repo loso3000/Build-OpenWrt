@@ -39,7 +39,8 @@ jobs:
     - name: Compare Tag Time
       id: compareTags
       run: |
-        if [ ${{steps.getTags.outputs.latestTag}} == ${{steps.getTags.outputs.myTag}} ] then
+        if [ ${{steps.getTags.outputs.latestTag}} == ${{steps.getTags.outputs.myTag}} ]
+        then
           echo "::set-output name=update::false"
         else
           echo "::set-output name=update::true"
