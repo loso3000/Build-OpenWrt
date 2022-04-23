@@ -136,7 +136,6 @@ jobs:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         
     - name: upload .config to WETRANSFER for test
-      id: package
       if: github.event.client_payload.test == 'true'
       run: |
         cd openwrt
