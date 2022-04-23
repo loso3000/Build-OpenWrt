@@ -28,7 +28,7 @@ jobs:
     - name: Get Tags
       id: getTags
       run: |
-        sudo apt-get install -y jq cut
+        sudo apt-get install -y jq
         latestTag=$(curl https://api.github.com/repos/x-wrt/build-release/releases/latest | jq '.tag_name' | sed 's/\"//g')
         latestTag=${latestTag:1}
         echo "::set-output name=latestTag::${latestTag}"
