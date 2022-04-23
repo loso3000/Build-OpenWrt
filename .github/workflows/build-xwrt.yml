@@ -12,7 +12,6 @@ name: Build XWrt
 
 on:
   repository_dispatch:
-  workflow_dispatch:
 
 env:
   TZ: Asia/Shanghai
