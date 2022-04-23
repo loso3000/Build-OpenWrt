@@ -25,6 +25,10 @@ on:
         description: 'build target'
         required: true
         default: 'x86_64'
+      test:
+        description: 'if test?'
+        required: false
+        default: 'false'
 
 jobs:
   check:
@@ -32,12 +36,21 @@ jobs:
 
     steps:
 
-    - name: Trigger build
+    - name: Trigger normal build
+      if: github.event.inputs.test != 'true'
       uses: peter-evans/repository-dispatch@v2
       with:
         token: ${{ secrets.ACTIONS_TRIGGER_PAT }}
-        event-type: manual X-Wrt ${{ github.event.inputs.target }} ${{ github.event.inputs.branch }}
-        client-payload: '{"branch": "${{ github.event.inputs.branch }}", "target": "${{ github.event.inputs.target }}"}'
+        event-type: build X-Wrt ${{ github.event.inputs.target }} ${{ github.event.inputs.branch }}
+        client-payload: '{"branch": "${{ github.event.inputs.branch }}", "target": "${{ github.event.inputs.target }}", "test": "false"}'
+    
+    - name: Trigger test
+      if: github.event.inputs.test == 'true'
+      uses: peter-evans/repository-dispatch@v2
+      with:
+        token: ${{ secrets.ACTIONS_TRIGGER_PAT }}
+        event-type: test X-Wrt ${{ github.event.inputs.target }} ${{ github.event.inputs.branch }}
+        client-payload: '{"branch": "${{ github.event.inputs.branch }}", "target": "${{ github.event.inputs.target }}", "test": "true"}'
         
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
