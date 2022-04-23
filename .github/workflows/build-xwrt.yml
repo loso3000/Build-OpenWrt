@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: Build XWrt
+name: Build X-Wrt
 
 on:
   repository_dispatch:
@@ -20,7 +20,7 @@ jobs:
   build:
     runs-on: ubuntu-20.04
 
-    name: X-Wrt ${{matrix.target}} ${{matrix.branch}}
+    name: ${{matrix.repo_type}} ${{matrix.target}} ${{matrix.branch}}
     strategy:
       fail-fast: false
       matrix:
