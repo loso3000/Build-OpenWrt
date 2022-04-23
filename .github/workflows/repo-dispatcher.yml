@@ -36,5 +36,5 @@ jobs:
       uses: peter-evans/repository-dispatch@v2
       with:
         token: ${{ secrets.ACTIONS_TRIGGER_PAT }}
-        event-type: manual build ${{ github.event.inputs.target }} ${{ github.event.inputs.branch }}
+        event-type: manual X-Wrt ${{matrix.target}} ${{matrix.branch}}
         client-payload: '{"branch": "${{ github.event.inputs.branch }}", "target": "${{ github.event.inputs.target }}"}'

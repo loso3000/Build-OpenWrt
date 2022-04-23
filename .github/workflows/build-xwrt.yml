@@ -20,7 +20,7 @@ jobs:
   build:
     runs-on: ubuntu-20.04
 
-    name: Build ${{ github.event.client_payload.target }} ${{ github.event.client_payload.branch }}
+    name: X-Wrt ${{matrix.target}} ${{matrix.branch}}
     strategy:
       fail-fast: false
       matrix:
@@ -184,6 +184,7 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
+        echo "::set-output name=release_name::XWrt ${{matrix.target}} ${{matrix.branch}}"
         touch release.txt
         echo -e `curl "https://api.github.com/repos/x-wrt/build-release/releases/tags/v${{matrix.branch}}" | jq '.body' | sed 's/\"//g' | sed 's/\\r\\n/\\n/g'` >> release.txt
         echo "::set-output name=status::success"
@@ -204,7 +205,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: ${{ env.RELEASE_TAG }}
+        name: ${{ steps.tag.outputs.release_name }}
         tag_name: ${{ env.RELEASE_TAG }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*

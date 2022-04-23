@@ -32,7 +32,7 @@ jobs:
   build:
     runs-on: ubuntu-20.04
 
-    name: ${{matrix.target}} ${{matrix.branch}}
+    name: X-Wrt ${{matrix.target}} ${{matrix.branch}}
     strategy:
       fail-fast: false
       matrix:
