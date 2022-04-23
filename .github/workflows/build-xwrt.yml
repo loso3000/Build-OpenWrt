@@ -49,6 +49,18 @@ jobs:
         echo "UPLOAD_COWTRANSFER=${UPLOAD_COWTRANSFER}" >> $GITHUB_ENV
         echo "UPLOAD_WETRANSFER=${UPLOAD_WETRANSFER}" >> $GITHUB_ENV
         echo "UPLOAD_RELEASE=${UPLOAD_RELEASE}" >> $GITHUB_ENV
+        
+    - name: Trigger Packages Update
+      run: |
+        gitdate=$(curl -s "https://api.github.com/repos/zhuxiaole/my-packages-for-x-wrt/actions/runs" | jq -r '.workflow_runs[0].created_at')
+        gitdate=$(date -d "$gitdate" +%s)
+        now=$(date -d "$(date)" +%s)
+        if [[ $(expr $gitdate + 300) < $now ]]; then
+          curl -X POST https://api.github.com/repos/zhuxiaole/my-packages-for-x-wrt/dispatches \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            -H "Authorization: token ${{ secrets.ACTIONS_TRIGGER_PAT }}" \
+          --data '{"event_type": "update"}'
+        fi
 
     - name: Initialization environment
       env:
