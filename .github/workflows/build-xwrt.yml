@@ -10,9 +10,8 @@
 
 name: Build X-Wrt
 
-on: 
+on:
   repository_dispatch:
-
 
 env:
   TZ: Asia/Shanghai
@@ -191,14 +190,14 @@ jobs:
 
     - name: Upload firmware directory
       uses: actions/upload-artifact@main
-      if: if: github.event.client_payload.test != 'true' && steps.organize.outputs.status == 'success' && !cancelled()
+      if: github.event.client_payload.test != 'true' && steps.organize.outputs.status == 'success' && !cancelled()
       with:
         name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
 
     - name: Upload firmware to cowtransfer
       id: cowtransfer
-      if: if: github.event.client_payload.test != 'true' && steps.organize.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
+      if: github.event.client_payload.test != 'true' && steps.organize.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
       run: |
         curl -fsSL git.io/file-transfer | sh
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
@@ -207,7 +206,7 @@ jobs:
 
     - name: Upload firmware to WeTransfer
       id: wetransfer
-      if: if: github.event.client_payload.test != 'true' && steps.organize.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true' && !cancelled()
+      if: github.event.client_payload.test != 'true' && steps.organize.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true' && !cancelled()
       run: |
         curl -fsSL git.io/file-transfer | sh
         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
@@ -216,7 +215,7 @@ jobs:
 
     - name: Generate release body
       id: tag
-      if: if: github.event.client_payload.test != 'true' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+      if: github.event.client_payload.test != 'true' && env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
         echo "::set-output name=release_name::${{matrix.repo_type}} ${{matrix.target}} ${{matrix.branch}}"
         touch release.txt
@@ -225,7 +224,7 @@ jobs:
         
     - name: Remove same tag Releases
       uses: dev-drprasad/delete-older-releases@v0.2.0
-      if: if: github.event.client_payload.test != 'true' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+      if: github.event.client_payload.test != 'true' && env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
         keep_latest: 0
         delete_tags: true
@@ -235,7 +234,7 @@ jobs:
 
     - name: Upload firmware to release
       uses: softprops/action-gh-release@v1
-      if: if: github.event.client_payload.test != 'true' && steps.tag.outputs.status == 'success' && !cancelled()
+      if: github.event.client_payload.test != 'true' && steps.tag.outputs.status == 'success' && !cancelled()
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
