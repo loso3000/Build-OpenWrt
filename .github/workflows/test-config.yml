@@ -50,7 +50,7 @@ jobs:
           source "xwrt/devices/${{matrix.target}}/settings.ini"
         fi
         echo "REPO_BRANCH=${{matrix.branch}}" >> $GITHUB_ENV
-        echo "MY_BUILD_TARGET=${{matrix.target}}" >> $GITHUB_ENV
+        echo "RELEASE_TAG=X-Wrt|${{matrix.target}}|${{matrix.branch}}" >> $GITHUB_ENV
         echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
         echo "FEEDS_CONF=${FEEDS_CONF}" >> $GITHUB_ENV
         echo "CONFIG_FILE=${CONFIG_FILE}" >> $GITHUB_ENV

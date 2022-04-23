@@ -38,7 +38,7 @@ jobs:
           source "xwrt/devices/${{matrix.target}}/settings.ini"
         fi
         echo "REPO_BRANCH=${{matrix.branch}}" >> $GITHUB_ENV
-        echo "MY_BUILD_TARGET=${{matrix.target}}" >> $GITHUB_ENV
+        echo "RELEASE_TAG=X-Wrt|${{matrix.target}}|${{matrix.branch}}" >> $GITHUB_ENV
         echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
         echo "FEEDS_CONF=${FEEDS_CONF}" >> $GITHUB_ENV
         echo "CONFIG_FILE=${CONFIG_FILE}" >> $GITHUB_ENV
@@ -180,11 +180,10 @@ jobs:
         echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
         echo "::set-output name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
 
-    - name: Generate release tag
+    - name: Generate release body
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-        echo "::set-output name=release_tag::XWrt|${{matrix.target}}|${{matrix.branch}}"
         touch release.txt
         echo -e `curl "https://api.github.com/repos/x-wrt/build-release/releases/tags/v${{matrix.branch}}" | jq '.body' | sed 's/\"//g' | sed 's/\\r\\n/\\n/g'` >> release.txt
         echo "::set-output name=status::success"
@@ -195,7 +194,7 @@ jobs:
       with:
         keep_latest: 0
         delete_tags: true
-        delete_tag_pattern: ${{ steps.tag.outputs.release_tag }}
+        delete_tag_pattern: ${{ env.RELEASE_TAG }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -205,8 +204,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: ${{ steps.tag.outputs.release_tag }}
-        tag_name: ${{ steps.tag.outputs.release_tag }}
+        name: ${{ env.RELEASE_TAG }}
+        tag_name: ${{ env.RELEASE_TAG }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
 
