@@ -26,6 +26,7 @@ jobs:
       matrix:
         branch: ["${{ github.event.client_payload.branch }}"]
         target: ["${{ github.event.client_payload.target }}"]
+        repo_type: ["X-Wrt"]
 
     steps:
     - name: Checkout
@@ -38,7 +39,7 @@ jobs:
           source "xwrt/devices/${{matrix.target}}/settings.ini"
         fi
         echo "REPO_BRANCH=${{matrix.branch}}" >> $GITHUB_ENV
-        echo "RELEASE_TAG=X-Wrt|${{matrix.target}}|${{matrix.branch}}" >> $GITHUB_ENV
+        echo "RELEASE_TAG=${{matrix.repo_type}}|${{matrix.target}}|${{matrix.branch}}" >> $GITHUB_ENV
         echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
         echo "FEEDS_CONF=${FEEDS_CONF}" >> $GITHUB_ENV
         echo "CONFIG_FILE=${CONFIG_FILE}" >> $GITHUB_ENV
@@ -196,7 +197,7 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-        echo "::set-output name=release_name::XWrt ${{matrix.target}} ${{matrix.branch}}"
+        echo "::set-output name=release_name::${{matrix.repo_type}} ${{matrix.target}} ${{matrix.branch}}"
         touch release.txt
         echo -e `curl "https://api.github.com/repos/x-wrt/build-release/releases/tags/v${{matrix.branch}}" | jq '.body' | sed 's/\"//g' | sed 's/\\r\\n/\\n/g'` >> release.txt
         echo "::set-output name=status::success"

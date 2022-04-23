@@ -1,0 +1,67 @@
+#
+# Copyright (c) 2019-2021 P3TERX <https://p3terx.com>
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+# https://github.com/P3TERX/Actions-OpenWrt
+# File: .github/workflows/update-checker.yml
+# Description: Source code update checker
+#
+
+name: Update Checker
+
+env:
+  TZ: Asia/Shanghai
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 */24 * * *
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Get Tags
+      id: getTags
+      run: |
+        sudo apt-get install -y jq cut
+        latestTag=$(curl https://api.github.com/repos/x-wrt/build-release/releases/latest | jq '.tag_name' | sed 's/\"//g')
+        latestTag=${latestTag:1}
+        echo "::set-output name=latestTag::${latestTag}"
+        myTag=$(curl https://api.github.com/repos/zhuxiaole/Build-OpenWrt/releases/latest | jq '.tag_name' | sed 's/\"//g')
+        myTag=$(echo $myTag | cut -d "|" -f3)
+        echo "::set-output name=myTag::${myTag}"
+
+    - name: Compare Tag Time
+      id: compareTags
+      run: |
+        if [ ${{steps.getTags.outputs.latestTag}} == ${{steps.getTags.outputs.myTag}} ] then
+          echo "::set-output name=update::false"
+        else
+          echo "::set-output name=update::true"
+        fi
+
+    - name: Trigger build
+      if: steps.compareTags.outputs.update == 'true'
+      run: |
+        sudo timedatectl set-timezone "$TZ"
+          curl \
+          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.ACTIONS_TRIGGER_PAT }}" \
+          -d '{"event_type": "X-Wrt x86_64 ${{ github.event.inputs.version }}", "client_payload": {"target": "x86_64", "branch": "${{ github.event.inputs.branch }}"}}'
+          curl \
+          -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{ secrets.ACTIONS_TRIGGER_PAT }}" \
+          -d '{"event_type": "X-Wrt mi-ac2100 ${{ github.event.inputs.version }}", "client_payload": {"target": "mi-ac2100", "branch": "${{ github.event.inputs.branch }}"}}'
+        
+    - name: Delete workflow runs
+      uses: GitRML/delete-workflow-runs@main
+      with:
+        retain_days: 1
+        keep_minimum_runs: 4
