@@ -10,8 +10,9 @@
 
 name: Build X-Wrt
 
-on:
+on: 
   repository_dispatch:
+
 
 env:
   TZ: Asia/Shanghai
