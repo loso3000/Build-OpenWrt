@@ -173,14 +173,14 @@ jobs:
 
     - name: Upload bin directory
       uses: actions/upload-artifact@main
-      if: github.event.client_payload.test != 'true' && steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
+      if: github.event.client_payload.test != 'true' && env.UPLOAD_BIN_DIR == 'true' && steps.compile.outputs.status == 'success'
       with:
         name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: openwrt/bin
 
     - name: Organize files
       id: organize
-      if: github.event.client_payload.test != 'true' && env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+      if: github.event.client_payload.test != 'true' && env.UPLOAD_FIRMWARE == 'true' && steps.compile.outputs.status == 'success' && !cancelled()
       run: |
         cd openwrt/bin/targets/*/*
         rm -rf packages
