@@ -57,3 +57,5 @@ jobs:
       with:
         repository: zhuxiaole/Build-OpenWrt
         maximum-workflow-runs-to-keep: 8
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
