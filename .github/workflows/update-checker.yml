@@ -65,5 +65,5 @@ jobs:
     - name: Delete workflow runs
       uses: MajorScruffy/delete-workflow-runs
       with:
-        repository: ${{ github.repository }}
+        repository: zhuxiaole/Build-OpenWrt
         maximum-workflow-runs-to-keep: 8
