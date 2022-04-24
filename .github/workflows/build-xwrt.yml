@@ -53,14 +53,14 @@ jobs:
         
     - name: Trigger Packages Update
       run: |
-        gitdate=$(curl -s "https://api.github.com/repos/zhuxiaole/my-packages-for-x-wrt/actions/runs" | jq -r '.workflow_runs[0].created_at')
+        gitdate=$(curl -s "https://api.github.com/repos/zhuxiaole/My-OpenWrt-Packages/actions/runs" | jq -r '.workflow_runs[0].created_at')
         gitdate=$(date -d "$gitdate" +%s)
         now=$(date -d "$(date)" +%s)
         if [[ $(expr $gitdate + 300) < $now ]]; then
-          curl -X POST https://api.github.com/repos/zhuxiaole/my-packages-for-x-wrt/dispatches \
+          curl -X POST https://api.github.com/repos/zhuxiaole/My-OpenWrt-Packages/dispatches \
             -H "Accept: application/vnd.github.everest-preview+json" \
             -H "Authorization: token ${{ secrets.ACTIONS_TRIGGER_PAT }}" \
-          --data '{"event_type": "update"}'
+          --data '{"event_type": "update by build firmware", "client_payload": {"target": "x-wrt"}}'
         fi
 
     - name: Initialization environment
