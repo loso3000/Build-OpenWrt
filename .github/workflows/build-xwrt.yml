@@ -119,6 +119,8 @@ jobs:
         then
           mv -f xwrt/devices/${{matrix.target}}/$CONFIG_FILE openwrt/.config
         fi
+        sed -i '/CONFIG_VERSION_NUMBER/d' openwrt/.config
+        sed -i '/CONFIG_VERSION_DIST/a\CONFIG_VERSION_NUMBER="${{matrix.branch}}"' openwrt/.config
         cd openwrt
         chmod +x $GITHUB_WORKSPACE/xwrt/devices/common/$DIY_P2_SH
         $GITHUB_WORKSPACE/xwrt/devices/common/$DIY_P2_SH
