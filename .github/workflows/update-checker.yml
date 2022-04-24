@@ -63,7 +63,7 @@ jobs:
           -d '{"event_type": "X-Wrt mi-ac2100 ${{steps.getTags.outputs.latestTag}}", "client_payload": {"target": "mi-ac2100", "branch": "${{steps.getTags.outputs.latestTag}}"}}'
         
     - name: Delete workflow runs
-      uses: GitRML/delete-workflow-runs@main
+      uses: MajorScruffy/delete-workflow-runs
       with:
-        retain_days: 1
-        keep_minimum_runs: 4
+        repository: ${{ github.repository }}
+        maximum-workflow-runs-to-keep: 8

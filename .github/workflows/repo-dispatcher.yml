@@ -53,7 +53,7 @@ jobs:
         client-payload: '{"branch": "${{ github.event.inputs.branch }}", "target": "${{ github.event.inputs.target }}", "test": "true"}'
         
     - name: Delete workflow runs
-      uses: GitRML/delete-workflow-runs@main
+      uses: MajorScruffy/delete-workflow-runs
       with:
-        retain_days: 1
-        keep_minimum_runs: 4
+        repository: ${{ github.repository }}
+        maximum-workflow-runs-to-keep: 8
