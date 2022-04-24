@@ -63,7 +63,7 @@ jobs:
           -d '{"event_type": "X-Wrt mi-ac2100 ${{steps.getTags.outputs.latestTag}}", "client_payload": {"target": "mi-ac2100", "branch": "${{steps.getTags.outputs.latestTag}}"}}'
         
     - name: Delete workflow runs
-      uses: Mattraks/delete-workflow-runs@v2
+      uses: MajorScruffy/delete-workflow-runs@v0.1.0
       with:
         repository: zhuxiaole/Build-OpenWrt
         maximum-workflow-runs-to-keep: 8

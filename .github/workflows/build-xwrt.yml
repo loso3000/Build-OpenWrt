@@ -245,7 +245,7 @@ jobs:
         files: ${{ env.FIRMWARE }}/*
 
     - name: Delete workflow runs
-      uses: Mattraks/delete-workflow-runs@v2
+      uses: MajorScruffy/delete-workflow-runs@v0.1.0
       with:
         repository: zhuxiaole/Build-OpenWrt
         maximum-workflow-runs-to-keep: 8
