@@ -53,9 +53,7 @@ jobs:
         client-payload: '{"branch": "${{ github.event.inputs.branch }}", "target": "${{ github.event.inputs.target }}", "test": "true"}'
         
     - name: Delete workflow runs
-      uses: MajorScruffy/delete-workflow-runs@v0.1.0
+      uses: Mattraks/delete-workflow-runs@v2
       with:
-        repository: zhuxiaole/Build-OpenWrt
-        maximum-workflow-runs-to-keep: 8
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        retain_days: 1
+        keep_minimum_runs: 4
