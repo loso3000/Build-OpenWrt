@@ -18,8 +18,9 @@ jobs:
       id: getTags
       run: |
         sudo apt-get install -y jq
-        latestTag=$(curl https://api.github.com/repos/x-wrt/build-release/releases/latest | jq '.tag_name' | sed 's/\"//g')
-        latestTag=${latestTag:1}
+        latestTag="$((curl -gs -H 'Content-Type: application/json' \
+          -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}" \
+          -X POST -d '{ "query": "query {repository(owner: \"x-wrt\", name: \"x-wrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep '22.' | tail -n 1)"
         echo "::set-output name=latestTag::${latestTag}"
         myTag=$(curl https://api.github.com/repos/zhuxiaole/Build-OpenWrt/releases/latest | jq '.tag_name' | sed 's/\"//g')
         myTag=$(echo $myTag | cut -d "|" -f3)

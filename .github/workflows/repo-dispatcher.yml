@@ -6,10 +6,6 @@ env:
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: 'repo branch or tag'
-        required: true
-        default: '22.03_b202204240424'
       target:
         description: 'build target'
         required: true
@@ -24,22 +20,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    
+    - name: Get latest tag
+      id: getTag
+      run: |
+        latestTag="$((curl -gs -H 'Content-Type: application/json' \
+          -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}" \
+          -X POST -d '{ "query": "query {repository(owner: \"x-wrt\", name: \"x-wrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep '22.' | tail -n 1)"
+        echo "::set-output name=latestTag::${latestTag}"
+        echo "$latestTag"
 
     - name: Trigger normal build
       if: github.event.inputs.test != 'true'
       uses: peter-evans/repository-dispatch@v2
       with:
         token: ${{ secrets.ACCESS_TOKEN }}
-        event-type: build X-Wrt ${{ github.event.inputs.target }} ${{ github.event.inputs.branch }}
-        client-payload: '{"branch": "${{ github.event.inputs.branch }}", "target": "${{ github.event.inputs.target }}", "test": "false"}'
+        event-type: build X-Wrt ${{ github.event.inputs.target }} ${{ steps.getTag.outputs.latestTag }}
+        client-payload: '{"branch": "${{ steps.getTag.outputs.latestTag }}", "target": "${{ github.event.inputs.target }}", "test": "false"}'
     
     - name: Trigger test
       if: github.event.inputs.test == 'true'
       uses: peter-evans/repository-dispatch@v2
       with:
         token: ${{ secrets.ACCESS_TOKEN }}
-        event-type: test X-Wrt ${{ github.event.inputs.target }} ${{ github.event.inputs.branch }}
-        client-payload: '{"branch": "${{ github.event.inputs.branch }}", "target": "${{ github.event.inputs.target }}", "test": "true"}'
+        event-type: test X-Wrt ${{ github.event.inputs.target }} ${{ steps.getTag.outputs.latestTag }}
+        client-payload: '{"branch": "${{ steps.getTag.outputs.latestTag }}", "target": "${{ github.event.inputs.target }}", "test": "true"}'
         
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
