@@ -22,13 +22,13 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}" \
           -X POST -d '{ "query": "query {repository(owner: \"x-wrt\", name: \"x-wrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep '22.' | tail -n 1)"
         echo "::set-output name=latestTag::${latestTag}"
-        echo "latestTag: $latestTag"
         myTag=$(curl https://api.github.com/repos/zhuxiaole/Build-OpenWrt/releases/latest | jq '.tag_name' | sed 's/\"//g')
         myTag=$(echo $myTag | cut -d "|" -f3)
         echo "::set-output name=myTag::${myTag}"
         echo "myTag: $myTag"
+        echo "latestTag: $latestTag"
 
-    - name: Compare Tag Time
+    - name: Compare Tags
       id: compareTags
       run: |
         if [ ${{steps.getTags.outputs.latestTag}} == ${{steps.getTags.outputs.myTag}} ]
