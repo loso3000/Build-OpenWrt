@@ -1,13 +1,3 @@
-#
-# Copyright (c) 2019-2020 P3TERX <https://p3terx.com>
-#
-# This is free software, licensed under the MIT License.
-# See /LICENSE for more information.
-#
-# https://github.com/P3TERX/Actions-OpenWrt
-# Description: Build OpenWrt using GitHub Actions
-#
-
 name: Build X-Wrt
 
 on:
@@ -59,7 +49,7 @@ jobs:
         if [[ $(expr $gitdate + 300) < $now ]]; then
           curl -X POST https://api.github.com/repos/zhuxiaole/My-OpenWrt-Packages/dispatches \
             -H "Accept: application/vnd.github.everest-preview+json" \
-            -H "Authorization: token ${{ secrets.ACTIONS_TRIGGER_PAT }}" \
+            -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
           --data '{"event_type": "update by build firmware", "client_payload": {"target": "x-wrt"}}'
         fi
 
@@ -231,13 +221,13 @@ jobs:
         delete_tags: true
         delete_tag_pattern: ${{ env.RELEASE_TAG }}
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
     - name: Upload firmware to release
       uses: softprops/action-gh-release@v1
       if: github.event.client_payload.test != 'true' && steps.tag.outputs.status == 'success' && !cancelled()
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       with:
         name: ${{ steps.tag.outputs.release_name }}
         tag_name: ${{ env.RELEASE_TAG }}
@@ -252,9 +242,10 @@ jobs:
 
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@v0.2.0
+      continue-on-error: true
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
-        keep_latest: 10
+        keep_latest: 15
         delete_tags: true
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
