@@ -247,7 +247,7 @@ jobs:
       continue-on-error: true
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
-        keep_latest: 15
+        keep_latest: 20
         delete_tags: true
       env:
         GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
