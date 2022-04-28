@@ -1,4 +1,4 @@
-name: Build X-Wrt
+name: Build X-WRT
 
 on:
   repository_dispatch:
@@ -16,7 +16,7 @@ jobs:
       matrix:
         branch: ["${{ github.event.client_payload.branch }}"]
         target: ["${{ github.event.client_payload.target }}"]
-        repo_type: ["X-Wrt"]
+        repo_type: ["X-WRT"]
 
     steps:
     - name: Checkout
@@ -28,8 +28,8 @@ jobs:
         if [ -f "xwrt/devices/${{matrix.target}}/settings.ini" ]; then
           source "xwrt/devices/${{matrix.target}}/settings.ini"
         fi
+        echo "RELEASE_TIME=$(date +"%Y%m%d%H%M%S")" >> $GITHUB_ENV
         echo "REPO_BRANCH=${{matrix.branch}}" >> $GITHUB_ENV
-        echo "RELEASE_TAG=${{matrix.repo_type}}|${{matrix.target}}|${{matrix.branch}}" >> $GITHUB_ENV
         echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
         echo "FEEDS_CONF=${FEEDS_CONF}" >> $GITHUB_ENV
         echo "CONFIG_FILE=${CONFIG_FILE}" >> $GITHUB_ENV
@@ -110,7 +110,9 @@ jobs:
           mv -f xwrt/devices/${{matrix.target}}/$CONFIG_FILE openwrt/.config
         fi
         sed -i '/CONFIG_VERSION_NUMBER/d' openwrt/.config
-        sed -i '/CONFIG_VERSION_DIST/a\CONFIG_VERSION_NUMBER="${{matrix.branch}}"' openwrt/.config
+        sed -i '/CONFIG_VERSION_DIST/a\CONFIG_VERSION_NUMBER="${{ matrix.branch }}"' openwrt/.config
+        sed -i '/CONFIG_VERSION_CODE/d' openwrt/.config
+        sed -i '/CONFIG_VERSION_NUMBER/a\CONFIG_VERSION_CODE="${{ env.RELEASE_TIME }}"' openwrt/.config
         cd openwrt
         chmod +x $GITHUB_WORKSPACE/xwrt/devices/common/$DIY_P2_SH
         $GITHUB_WORKSPACE/xwrt/devices/common/$DIY_P2_SH
@@ -204,13 +206,16 @@ jobs:
         echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
         echo "::set-output name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
 
-    - name: Generate release body
+    - name: Generate release tag
       id: tag
       if: github.event.client_payload.test != 'true' && env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-        echo "::set-output name=release_name::${{matrix.repo_type}} ${{matrix.target}} ${{matrix.branch}}"
+        release_tag="${{matrix.repo_type}}|${{matrix.target}}|${{ env.RELEASE_TIME }}"
+        release_name="${{matrix.repo_type}} ${{matrix.target}} ${{ env.RELEASE_TIME }}"
+        echo "::set-output name=release_tag::${$release_tag}"
+        echo "::set-output name=release_name::${$release_name}"
         touch release.txt
-        echo -e `curl "https://api.github.com/repos/x-wrt/build-release/releases/tags/v${{matrix.branch}}" | jq '.body' | sed 's/\"//g' | sed 's/\\r\\n/\\n/g'` >> release.txt
+        echo "基于${{matrix.repo_type}}-${{matrix.branch}}编译" >> release.txt
         echo "::set-output name=status::success"
         
     - name: Remove same tag Releases
@@ -219,7 +224,7 @@ jobs:
       with:
         keep_latest: 0
         delete_tags: true
-        delete_tag_pattern: ${{ env.RELEASE_TAG }}
+        delete_tag_pattern: ${{ steps.tag.outputs.release_tag }}
       env:
         GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
@@ -230,7 +235,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       with:
         name: ${{ steps.tag.outputs.release_name }}
-        tag_name: ${{ env.RELEASE_TAG }}
+        tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
 

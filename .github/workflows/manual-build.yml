@@ -1,4 +1,4 @@
-name: Repo Dispatcher
+name: Manual Build
 
 env:
   TZ: Asia/Shanghai
@@ -18,9 +18,9 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    name: Manual build ${{matrix.target}}
 
     steps:
-    
     - name: Get latest tag
       id: getTag
       run: |
@@ -35,7 +35,7 @@ jobs:
       uses: peter-evans/repository-dispatch@v2
       with:
         token: ${{ secrets.ACCESS_TOKEN }}
-        event-type: build X-Wrt ${{ github.event.inputs.target }} ${{ steps.getTag.outputs.latestTag }}
+        event-type: build X-WRT ${{ github.event.inputs.target }} ${{ steps.getTag.outputs.latestTag }}
         client-payload: '{"branch": "${{ steps.getTag.outputs.latestTag }}", "target": "${{ github.event.inputs.target }}", "test": "false"}'
     
     - name: Trigger test
@@ -43,7 +43,7 @@ jobs:
       uses: peter-evans/repository-dispatch@v2
       with:
         token: ${{ secrets.ACCESS_TOKEN }}
-        event-type: test X-Wrt ${{ github.event.inputs.target }} ${{ steps.getTag.outputs.latestTag }}
+        event-type: test X-WRT ${{ github.event.inputs.target }} ${{ steps.getTag.outputs.latestTag }}
         client-payload: '{"branch": "${{ steps.getTag.outputs.latestTag }}", "target": "${{ github.event.inputs.target }}", "test": "true"}'
         
     - name: Delete workflow runs
