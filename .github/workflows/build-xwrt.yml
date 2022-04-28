@@ -237,6 +237,27 @@ jobs:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
+        
+    - name: Prepare version information
+      if: github.event.client_payload.test != 'true' && steps.tag.outputs.status == 'success' && !cancelled()
+      run: |
+        mkdir firmware_version
+        cd firmware_version
+        echo "${{ env.RELEASE_CODE }}" > version.txt
+        md5=$((md5sum *squashfs-sysupgrade* || md5sum *squashfs-combined-efi*) | awk '{print $1}') 2>/dev/null
+        echo $md5 >> version.txt
+        
+    - name: Upload firmware version information
+      if: github.event.client_payload.test != 'true' && steps.tag.outputs.status == 'success' && !cancelled()
+      uses: easingthemes/ssh-deploy@main
+      with:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        ARGS: "-avzr --exclude="
+        SOURCE: firmware_version/
+        REMOTE_HOST: ${{ secrets.OP_SERVER_HOST }}
+        REMOTE_PORT: ${{ secrets.OP_SERVER_PORT }}
+        REMOTE_USER: root
+        TARGET: "/www/wwwroot/${{ secrets.OP_SERVER_HOST }}/firmware/${{matrix.manufacturer}}/${{matrix.target}}/"
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
