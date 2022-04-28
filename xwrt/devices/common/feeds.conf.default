@@ -4,3 +4,4 @@ src-git-full routing https://github.com/x-wrt/routing.git
 src-git-full telephony https://github.com/x-wrt/telephony.git
 src-git-full x https://github.com/x-wrt/com.x-wrt.git
 src-git zhuxiaole https://github.com/zhuxiaole/OpenWrt-Packages;x-wrt
+src-git onlyme https://github.com/zhuxiaole/my-packages;master
