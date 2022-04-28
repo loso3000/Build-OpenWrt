@@ -213,8 +213,8 @@ jobs:
       run: |
         release_tag="${{matrix.repo_type}}|${{matrix.target}}|${{ env.RELEASE_CODE }}"
         release_name="${{matrix.repo_type}} ${{matrix.target}} ${{ env.RELEASE_CODE }}"
-        echo "::set-output name=release_tag::${$release_tag}"
-        echo "::set-output name=release_name::${$release_name}"
+        echo "::set-output name=release_tag::${release_tag}"
+        echo "::set-output name=release_name::${release_name}"
         touch release.txt
         echo "基于${{matrix.repo_type}}-${{matrix.branch}}编译" >> release.txt
         echo "::set-output name=status::success"
