@@ -247,7 +247,7 @@ jobs:
         cd firmware_version
         echo "${{ env.RELEASE_CODE }}" > version.txt
         md5=$((md5sum *squashfs-sysupgrade* || md5sum *squashfs-combined-efi*) | awk '{print $1}') 2>/dev/null
-        echo $md5 >> version.txt
+        echo $md5 > md5.txt
         echo ${{ steps.tag.outputs.release_body }} > updatelogs.txt
         
     - name: Upload firmware version information
