@@ -28,7 +28,8 @@ jobs:
         if [ -f "xwrt/devices/${{matrix.target}}/settings.ini" ]; then
           source "xwrt/devices/${{matrix.target}}/settings.ini"
         fi
-        echo "RELEASE_CODE=v$(date +"%Y%m%d%H%M%S")" >> $GITHUB_ENV
+        current_time=$(date +"%Y%m%d%H%M%S")
+        echo "RELEASE_CODE=v${current_time}" >> $GITHUB_ENV
         echo "REPO_BRANCH=${{matrix.branch}}" >> $GITHUB_ENV
         echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
         echo "FEEDS_CONF=${FEEDS_CONF}" >> $GITHUB_ENV
