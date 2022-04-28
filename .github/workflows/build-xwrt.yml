@@ -28,7 +28,7 @@ jobs:
         if [ -f "xwrt/devices/${{matrix.target}}/settings.ini" ]; then
           source "xwrt/devices/${{matrix.target}}/settings.ini"
         fi
-        echo "RELEASE_TIME=$(date +"%Y%m%d%H%M%S")" >> $GITHUB_ENV
+        echo "RELEASE_CODE=v$(date +"%Y%m%d%H%M%S")" >> $GITHUB_ENV
         echo "REPO_BRANCH=${{matrix.branch}}" >> $GITHUB_ENV
         echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
         echo "FEEDS_CONF=${FEEDS_CONF}" >> $GITHUB_ENV
@@ -112,7 +112,7 @@ jobs:
         sed -i '/CONFIG_VERSION_NUMBER/d' openwrt/.config
         sed -i '/CONFIG_VERSION_DIST/a\CONFIG_VERSION_NUMBER="${{ matrix.branch }}"' openwrt/.config
         sed -i '/CONFIG_VERSION_CODE/d' openwrt/.config
-        sed -i '/CONFIG_VERSION_NUMBER/a\CONFIG_VERSION_CODE="${{ env.RELEASE_TIME }}"' openwrt/.config
+        sed -i '/CONFIG_VERSION_NUMBER/a\CONFIG_VERSION_CODE="${{ env.RELEASE_CODE }}"' openwrt/.config
         cd openwrt
         chmod +x $GITHUB_WORKSPACE/xwrt/devices/common/$DIY_P2_SH
         $GITHUB_WORKSPACE/xwrt/devices/common/$DIY_P2_SH
@@ -210,8 +210,8 @@ jobs:
       id: tag
       if: github.event.client_payload.test != 'true' && env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-        release_tag="${{matrix.repo_type}}|${{matrix.target}}|${{ env.RELEASE_TIME }}"
-        release_name="${{matrix.repo_type}} ${{matrix.target}} ${{ env.RELEASE_TIME }}"
+        release_tag="${{matrix.repo_type}}|${{matrix.target}}|${{ env.RELEASE_CODE }}"
+        release_name="${{matrix.repo_type}} ${{matrix.target}} ${{ env.RELEASE_CODE }}"
         echo "::set-output name=release_tag::${$release_tag}"
         echo "::set-output name=release_name::${$release_name}"
         touch release.txt
