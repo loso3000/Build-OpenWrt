@@ -260,7 +260,7 @@ jobs:
         REMOTE_HOST: ${{ secrets.OP_SERVER_HOST }}
         REMOTE_PORT: ${{ secrets.OP_SERVER_PORT }}
         REMOTE_USER: root
-        TARGET: "/www/wwwroot/${{ secrets.OP_SERVER_HOST }}/firmware/${{matrix.manufacturer}}/${{matrix.target}}/"
+        TARGET: "/data/openwrt/firmware/${{matrix.manufacturer}}/${{matrix.target}}/"
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
