@@ -91,6 +91,8 @@ sed -i "/net.ipv4.tcp_congestion_control=bbr/a\net.ipv4.tcp_available_congestion
 
 sed -i "/\$DISTRIB_ID/a\sed -i '/DISTRIB_GITHUB/d' /etc/openwrt_release" feeds/x/base-config-setting/files/uci.defaults
 sed -i "/DISTRIB_GITHUB/a\echo \"DISTRIB_GITHUB=\'https://github.com/zhuxiaole/Build-OpenWrt\'\" >> /etc/openwrt_release" feeds/x/base-config-setting/files/uci.defaults
+sed -i "/\$DISTRIB_ID/a\sed -i '/DISTRIB_MY_TARGET/d' /etc/openwrt_release" feeds/x/base-config-setting/files/uci.defaults
+sed -i "/DISTRIB_MY_TARGET/a\echo \"DISTRIB_MY_TARGET=\'${MY_BUILD_TARGET}\'\" >> /etc/openwrt_release" feeds/x/base-config-setting/files/uci.defaults
 
 rm -rf feeds/x/luci-app-wizard
 git_sparse_clone master "https://github.com/kiddin9/openwrt-packages" "feeds/x/wizard_luci" luci-app-wizard

@@ -10,13 +10,13 @@ jobs:
   build:
     runs-on: ubuntu-20.04
 
-    name: ${{matrix.repo_type}} ${{matrix.target}} ${{matrix.branch}}
+    name: ${{matrix.manufacturer}} ${{matrix.target}} ${{matrix.branch}}
     strategy:
       fail-fast: false
       matrix:
         branch: ["${{ github.event.client_payload.branch }}"]
         target: ["${{ github.event.client_payload.target }}"]
-        repo_type: ["X-WRT"]
+        manufacturer: ["X-WRT"]
 
     steps:
     - name: Checkout
@@ -30,7 +30,9 @@ jobs:
         fi
         current_time=$(date +"%Y%m%d%H%M%S")
         echo "RELEASE_CODE=v${current_time}" >> $GITHUB_ENV
+        echo "MY_BUILD_TARGET=${{matrix.target}}" >> $GITHUB_ENV
         echo "REPO_BRANCH=${{matrix.branch}}" >> $GITHUB_ENV
+        echo "OP_MANUFACTURER=${{matrix.manufacturer}}" >> $GITHUB_ENV
         echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
         echo "FEEDS_CONF=${FEEDS_CONF}" >> $GITHUB_ENV
         echo "CONFIG_FILE=${CONFIG_FILE}" >> $GITHUB_ENV
@@ -110,10 +112,6 @@ jobs:
         then
           mv -f xwrt/devices/${{matrix.target}}/$CONFIG_FILE openwrt/.config
         fi
-        sed -i '/CONFIG_VERSION_NUMBER/d' openwrt/.config
-        sed -i '/CONFIG_VERSION_DIST/a\CONFIG_VERSION_NUMBER="${{ matrix.branch }}"' openwrt/.config
-        sed -i '/CONFIG_VERSION_CODE/d' openwrt/.config
-        sed -i '/CONFIG_VERSION_NUMBER/a\CONFIG_VERSION_CODE="${{ env.RELEASE_CODE }}"' openwrt/.config
         cd openwrt
         chmod +x $GITHUB_WORKSPACE/xwrt/devices/common/$DIY_P2_SH
         $GITHUB_WORKSPACE/xwrt/devices/common/$DIY_P2_SH
@@ -211,12 +209,12 @@ jobs:
       id: tag
       if: github.event.client_payload.test != 'true' && env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-        release_tag="${{matrix.repo_type}}|${{matrix.target}}|${{ env.RELEASE_CODE }}"
-        release_name="${{matrix.repo_type}} ${{matrix.target}} ${{ env.RELEASE_CODE }}"
+        release_tag="${{matrix.manufacturer}}|${{matrix.target}}|${{ env.RELEASE_CODE }}"
+        release_name="${{matrix.manufacturer}} ${{matrix.target}} ${{ env.RELEASE_CODE }}"
         echo "::set-output name=release_tag::${release_tag}"
         echo "::set-output name=release_name::${release_name}"
         touch release.txt
-        echo "基于${{matrix.repo_type}}-${{matrix.branch}}编译" >> release.txt
+        echo "基于${{matrix.manufacturer}}-${{matrix.branch}}编译" >> release.txt
         echo "::set-output name=status::success"
         
     - name: Remove same tag Releases
