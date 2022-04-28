@@ -1,11 +1,11 @@
 #!/bin/bash
 
 sed -i '/CONFIG_VERSION_NUMBER/d' .config
-sed -i '/CONFIG_VERSION_DIST/a\CONFIG_VERSION_NUMBER="${REPO_BRANCH}"' .config
+sed -i '/CONFIG_VERSION_DIST/a\CONFIG_VERSION_NUMBER="$REPO_BRANCH"' .config
 sed -i '/CONFIG_VERSION_CODE/d' .config
-sed -i '/CONFIG_VERSION_NUMBER/a\CONFIG_VERSION_CODE="${RELEASE_CODE}"' .config
+sed -i '/CONFIG_VERSION_NUMBER/a\CONFIG_VERSION_CODE="$RELEASE_CODE"' .config
 sed -i '/CONFIG_VERSION_MANUFACTURER/d' .config
-sed -i '/CONFIG_VERSION_CODE/a\CONFIG_VERSION_MANUFACTURER="${OP_MANUFACTURER}"' .config
+sed -i '/CONFIG_VERSION_CODE/a\CONFIG_VERSION_MANUFACTURER="$OP_MANUFACTURER"' .config
 
 sed -i "s/hostname='OpenWrt'/hostname='ZXLWrt'/g" package/base-files/files/bin/config_generate
 sed -i "s/timezone='UTC'/timezone='CST-8'/" package/base-files/files/bin/config_generate
