@@ -246,31 +246,25 @@ jobs:
         mkdir firmware_version
         cd firmware_version
         echo "latest_version:${{ env.RELEASE_CODE }}" > version.txt
-        if [ -e "${{ env.FIRMWARE }}/*squashfs-sysupgrade.bin" ]
+        if [ "$(ls ${{ env.FIRMWARE }}/*squashfs-sysupgrade.bin 2> /dev/null | wc -l)" != "0" ]
         then
           download_url=$(curl -skfL "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ steps.tag.outputs.release_tag }}" | jq -r '.assets[].browser_download_url' | sed -n "/squashfs-sysupgrade.bin/p")
         else
-          if [ -e "${{ env.FIRMWARE }}/*squashfs-combined.img.gz" ]
+          if [ "$(ls ${{ env.FIRMWARE }}/*squashfs-combined.img.gz 2> /dev/null | wc -l)" != "0" ]
           then
             download_url=$(curl -skfL "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ steps.tag.outputs.release_tag }}" | jq -r '.assets[].browser_download_url' | sed -n "/squashfs-combined.img.gz/p")
           else
             download_url=""
           fi
         fi
-        if [ -e "${{ env.FIRMWARE }}/*squashfs-combined-efi.img.gz" ]
+        if [ "$(ls ${{ env.FIRMWARE }}/*squashfs-combined-efi.img.gz 2> /dev/null | wc -l)" != "0" ]
         then
           efi_download_url=$(curl -skfL "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ steps.tag.outputs.release_tag }}" | jq -r '.assets[].browser_download_url' | sed -n "/squashfs-combined-efi.img.gz/p")
         else
           efi_download_url=""
         fi
-        if [ "${download_url}" != "" ]
-        then
-          download_url="https://ghproxy.com/${download_url}"
-        fi
-        if [ "${efi_download_url}" != "" ]
-        then
-          efi_download_url="https://ghproxy.com/${efi_download_url}"
-        fi
+        if [ "${download_url}" != "" ]; then download_url="https://ghproxy.com/${download_url}"; fi
+        if [ "${efi_download_url}" != "" ]; then efi_download_url="https://ghproxy.com/${efi_download_url}"; fi
         echo "download_url:${download_url}" >> version.txt
         echo "efi_download_url:${efi_download_url}" >> version.txt
         md5=$((md5sum ${{ env.FIRMWARE }}/*squashfs-sysupgrade* || md5sum ${{ env.FIRMWARE }}/*squashfs-combined.img*) | awk '{print $1}') 2>/dev/null
