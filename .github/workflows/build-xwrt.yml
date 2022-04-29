@@ -263,11 +263,11 @@ jobs:
         else
           efi_download_url=""
         fi
-        if [ ${download_url} != "" ]
+        if [ "${download_url}" != "" ]
         then
           download_url="https://ghproxy.com/${download_url}"
         fi
-        if [ ${efi_download_url} != "" ]
+        if [ "${efi_download_url}" != "" ]
         then
           efi_download_url="https://ghproxy.com/${efi_download_url}"
         fi
