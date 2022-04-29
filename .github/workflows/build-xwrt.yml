@@ -245,9 +245,30 @@ jobs:
       run: |
         mkdir firmware_version
         cd firmware_version
-        echo "${{ env.RELEASE_CODE }}" > version.txt
-        md5=$((md5sum ${{ env.FIRMWARE }}/*squashfs-sysupgrade* || md5sum ${{ env.FIRMWARE }}/*squashfs-combined-efi*) | awk '{print $1}') 2>/dev/null
-        echo $md5 > md5.txt
+        echo "latest_version:${{ env.RELEASE_CODE }}" > version.txt
+        if [ -e "${{ env.FIRMWARE }}/*squashfs-sysupgrade.bin" ]
+        then
+          download_url=$(curl -skfL "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ steps.tag.outputs.release_tag }}" | jq -r '.assets[].browser_download_url' | sed -n "/squashfs-sysupgrade.bin/p")
+        else
+          if [ -e "${{ env.FIRMWARE }}/*squashfs-combined.img.gz" ]
+          then
+            download_url=$(curl -skfL "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ steps.tag.outputs.release_tag }}" | jq -r '.assets[].browser_download_url' | sed -n "/squashfs-combined.img.gz/p")
+          else
+            download_url=""
+          fi
+        fi
+        if [ -e "${{ env.FIRMWARE }}/*squashfs-combined-efi.img.gz" ]
+        then
+          efi_download_url=$(curl -skfL "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ steps.tag.outputs.release_tag }}" | jq -r '.assets[].browser_download_url' | sed -n "/squashfs-combined-efi.img.gz/p")
+        else
+          efi_download_url=""
+        fi
+        echo "download_url:${download_url}" >> version.txt
+        echo "efi_download_url:${efi_download_url}" >> version.txt
+        md5=$((md5sum ${{ env.FIRMWARE }}/*squashfs-sysupgrade* || md5sum ${{ env.FIRMWARE }}/*squashfs-combined.img*) | awk '{print $1}') 2>/dev/null
+        efi_md5=$((md5sum ${{ env.FIRMWARE }}/*squashfs-combined-efi*) | awk '{print $1}') 2>/dev/null
+        echo "md5:${md5}" >> version.txt
+        echo "efi_md5:${efi_md5}" >> version.txt
         echo ${{ steps.tag.outputs.release_body }} > updatelogs.txt
         
     - name: Upload firmware version information
