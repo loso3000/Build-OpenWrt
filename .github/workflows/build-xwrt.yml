@@ -244,9 +244,10 @@ jobs:
       if: github.event.client_payload.test != 'true' && steps.tag.outputs.status == 'success' && !cancelled()
       run: |
         mkdir firmware_version
-        cd firmware_version
-        echo "${{ env.RELEASE_CODE }}" > version.txt
+        cd ${{ env.FIRMWARE }}
         md5=$((md5sum *squashfs-sysupgrade* || md5sum *squashfs-combined-efi*) | awk '{print $1}') 2>/dev/null
+        cd $GITHUB_WORKSPACE/openwrt/firmware_version
+        echo "${{ env.RELEASE_CODE }}" > version.txt
         echo $md5 > md5.txt
         echo ${{ steps.tag.outputs.release_body }} > updatelogs.txt
         
