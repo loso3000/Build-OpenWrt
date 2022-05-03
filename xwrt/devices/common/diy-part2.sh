@@ -19,18 +19,14 @@ sed -i "/CONFIG_VERSION_MANUFACTURER=/d" .config
 sed -i "/CONFIG_VERSION_CODE=/a\CONFIG_VERSION_MANUFACTURER=\"$OP_MANUFACTURER\"" .config
 
 mkdir my_hack_patches
-git_sparse_clone master "https://github.com/immortalwrt/immortalwrt" "immortalwrt_patches/5.10_patches" target/linux/generic/hack-5.10
-git_sparse_clone master "https://github.com/coolsnowwolf/lede" "lede_patches/5.10_patches" target/linux/generic/hack-5.10
-git_sparse_clone master "https://github.com/coolsnowwolf/lede" "lede_patches/5.15_patches" target/linux/generic/hack-5.15
-git_sparse_clone master "https://github.com/coolsnowwolf/lede" "lede_patches/5.4_patches" target/linux/generic/hack-5.4
-mv immortalwrt_patches/hack-5.10/953-net-patch-linux-kernel-to-support-shortcut-fe.patch target/linux/generic/hack-5.10/
-mv lede_patches/hack-5.10/601-netfilter-export-udp_get_timeouts-function.patch target/linux/generic/hack-5.10/
-mv lede_patches/hack-5.15/953-net-patch-linux-kernel-to-support-shortcut-fe.patch target/linux/generic/hack-5.15/
-mv lede_patches/hack-5.4/650-netfilter-add-xt_OFFLOAD-target.patch target/linux/generic/hack-5.4/
-mv lede_patches/hack-5.4/953-net-patch-linux-kernel-to-support-shortcut-fe.patch target/linux/generic/hack-5.4/
-mv lede_patches/hack-5.4/601-netfilter-export-udp_get_timeouts-function.patch target/linux/generic/hack-5.4/
-rm -rf immortalwrt_patches
-rm -rf lede_patches
+git_sparse_clone 21.02 "https://github.com/Lienol/openwrt" "op_patches/5.4_patches" target/linux/generic/hack-5.4
+git_sparse_clone master "https://github.com/Lienol/openwrt" "op_patches/5.10_patches" target/linux/generic/hack-5.10
+mv op_patches/hack-5.4/601-netfilter-export-udp_get_timeouts-function.patch target/linux/generic/hack-5.4/
+mv op_patches/hack-5.4/650-netfilter-add-xt_OFFLOAD-target.patch target/linux/generic/hack-5.4/
+mv op_patches/hack-5.4/953-net-patch-linux-kernel-to-support-shortcut-fe.patch target/linux/generic/hack-5.4/
+mv op_patches/hack-5.10/601-netfilter-export-udp_get_timeouts-function.patch target/linux/generic/hack-5.10/
+mv op_patches/hack-5.10/953-net-patch-linux-kernel-to-support-shortcut-fe.patch target/linux/generic/hack-5.10/
+rm -rf op_patches
 
 sed -i "s/hostname='OpenWrt'/hostname='ZXLWrt'/g" package/base-files/files/bin/config_generate
 sed -i "s/timezone='UTC'/timezone='CST-8'/" package/base-files/files/bin/config_generate
