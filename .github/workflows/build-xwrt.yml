@@ -205,7 +205,7 @@ jobs:
 
     - name: Generate release tag
       id: tag
-      if: github.event.client_payload.test != 'true' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+      if: github.event.client_payload.test != 'true' && steps.organize.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
         release_tag="${{matrix.manufacturer}}|${{matrix.target}}|${{ env.RELEASE_CODE }}"
         release_name="${{matrix.manufacturer}} ${{matrix.target}} ${{ env.RELEASE_CODE }}"
