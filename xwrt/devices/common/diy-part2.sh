@@ -18,12 +18,17 @@ sed -i "/CONFIG_VERSION_NUMBER=/a\CONFIG_VERSION_CODE=\"$RELEASE_CODE\"" .config
 sed -i "/CONFIG_VERSION_MANUFACTURER=/d" .config
 sed -i "/CONFIG_VERSION_CODE=/a\CONFIG_VERSION_MANUFACTURER=\"$OP_MANUFACTURER\"" .config
 
-git_sparse_clone master "https://github.com/coolsnowwolf/lede" "target/linux/generic/hack-5.10/shortcut_fe_patch/" target/linux/generic/hack-5.10/953-net-patch-linux-kernel-to-support-shortcut-fe.patch
-git_sparse_clone master "https://github.com/coolsnowwolf/lede" "target/linux/generic/hack-5.10/shortcut_fe_patch2/" target/linux/generic/hack-5.10/601-netfilter-export-udp_get_timeouts-function.patch
-git_sparse_clone master "https://github.com/coolsnowwolf/lede" "target/linux/generic/hack-5.15/shortcut_fe_patch/" target/linux/generic/hack-5.15/953-net-patch-linux-kernel-to-support-shortcut-fe.patch
-git_sparse_clone master "https://github.com/coolsnowwolf/lede" "target/linux/generic/hack-5.4/offload_patch/" target/linux/generic/hack-5.4/650-netfilter-add-xt_OFFLOAD-target.patch
-git_sparse_clone master "https://github.com/coolsnowwolf/lede" "target/linux/generic/hack-5.4/shortcut_fe_patch/" target/linux/generic/hack-5.4/953-net-patch-linux-kernel-to-support-shortcut-fe.patch
-git_sparse_clone master "https://github.com/coolsnowwolf/lede" "target/linux/generic/hack-5.4/shortcut_fe_patch2/" target/linux/generic/hack-5.4/601-netfilter-export-udp_get_timeouts-function.patch
+mkdir my_hack_patches
+git_sparse_clone master "https://github.com/coolsnowwolf/lede" "my_hack_patches/5.10_patches" target/linux/generic/hack-5.10
+git_sparse_clone master "https://github.com/coolsnowwolf/lede" "my_hack_patches/5.15_patches" target/linux/generic/hack-5.15
+git_sparse_clone master "https://github.com/coolsnowwolf/lede" "my_hack_patches/5.4_patches" target/linux/generic/hack-5.4
+mv my_hack_patches/hack-5.10/953-net-patch-linux-kernel-to-support-shortcut-fe.patch target/linux/generic/hack-5.10/
+mv my_hack_patches/hack-5.10/601-netfilter-export-udp_get_timeouts-function.patch target/linux/generic/hack-5.10/
+mv my_hack_patches/hack-5.15/953-net-patch-linux-kernel-to-support-shortcut-fe.patch target/linux/generic/hack-5.15/
+mv my_hack_patches/hack-5.4/650-netfilter-add-xt_OFFLOAD-target.patch target/linux/generic/hack-5.4/
+mv my_hack_patches/hack-5.4/953-net-patch-linux-kernel-to-support-shortcut-fe.patch target/linux/generic/hack-5.4/
+mv my_hack_patches/hack-5.4/601-netfilter-export-udp_get_timeouts-function.patch target/linux/generic/hack-5.4/
+rm -rf my_hack_patches
 
 sed -i "s/hostname='OpenWrt'/hostname='ZXLWrt'/g" package/base-files/files/bin/config_generate
 sed -i "s/timezone='UTC'/timezone='CST-8'/" package/base-files/files/bin/config_generate
