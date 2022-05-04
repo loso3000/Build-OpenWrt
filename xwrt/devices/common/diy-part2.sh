@@ -18,12 +18,12 @@ sed -i "/CONFIG_VERSION_NUMBER=/a\CONFIG_VERSION_CODE=\"$RELEASE_CODE\"" .config
 sed -i "/CONFIG_VERSION_MANUFACTURER=/d" .config
 sed -i "/CONFIG_VERSION_CODE=/a\CONFIG_VERSION_MANUFACTURER=\"$OP_MANUFACTURER\"" .config
 
-mkdir my_hack_patches
-git_sparse_clone master "https://github.com/coolsnowwolf/lede" "op_patches/5.10_patches" target/linux/generic/hack-5.10
-mv op_patches/hack-5.10/601-netfilter-export-udp_get_timeouts-function.patch target/linux/generic/hack-5.10/
-mv op_patches/hack-5.10/952-net-conntrack-events-support-multiple-registrant.patch target/linux/generic/hack-5.10/
-mv op_patches/hack-5.10/953-net-patch-linux-kernel-to-support-shortcut-fe.patch target/linux/generic/hack-5.10/
-rm -rf op_patches
+#mkdir my_hack_patches
+#git_sparse_clone master "https://github.com/coolsnowwolf/lede" "op_patches/5.10_patches" target/linux/generic/hack-5.10
+#mv op_patches/hack-5.10/601-netfilter-export-udp_get_timeouts-function.patch target/linux/generic/hack-5.10/
+#mv op_patches/hack-5.10/952-net-conntrack-events-support-multiple-registrant.patch target/linux/generic/hack-5.10/
+#mv op_patches/hack-5.10/953-net-patch-linux-kernel-to-support-shortcut-fe.patch target/linux/generic/hack-5.10/
+#rm -rf op_patches
 
 sed -i "s/hostname='OpenWrt'/hostname='ZXLWrt'/g" package/base-files/files/bin/config_generate
 sed -i "s/timezone='UTC'/timezone='CST-8'/" package/base-files/files/bin/config_generate
