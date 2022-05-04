@@ -20,7 +20,6 @@ sed -i "/CONFIG_VERSION_CODE=/a\CONFIG_VERSION_MANUFACTURER=\"$OP_MANUFACTURER\"
 
 mkdir my_hack_patches
 git_sparse_clone master "https://github.com/immortalwrt/immortalwrt" "op_patches/5.10_patches" target/linux/generic/hack-5.10
-mv op_patches/hack-5.10/952-net-conntrack-events-support-multiple-registrant.patch target/linux/generic/hack-5.10/
 mv op_patches/hack-5.10/953-net-patch-linux-kernel-to-support-shortcut-fe.patch target/linux/generic/hack-5.10/
 rm -rf op_patches
 
