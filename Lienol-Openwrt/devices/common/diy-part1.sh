@@ -50,10 +50,10 @@ echo -e 'msgid "Traffic Priority"' >>feeds/luci/applications/luci-app-nft-qos/po
 echo -e 'msgstr "流量優先權"' >>feeds/luci/applications/luci-app-nft-qos/po/zh_Hant/nft-qos.po
 
 mkdir -p feeds/luci/modules/luci-base/patches
-cp $GITHUB_WORKSPACE/Lienol/devices/common/patches/luci-base/* feeds/luci/modules/luci-base/patches
+cp $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/patches/luci-base/* feeds/luci/modules/luci-base/patches
 
 
-chmod +x $GITHUB_WORKSPACE/Lienol/devices/common/convert_translation.sh
-bash $GITHUB_WORKSPACE/Lienol/devices/common/convert_translation.sh -a >/dev/null 2>&1
+chmod +x $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/convert_translation.sh
+bash $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/convert_translation.sh -a >/dev/null 2>&1
 
 exit 0

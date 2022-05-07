@@ -24,7 +24,7 @@ sed -i "/DISTRIB_DESCRIPTION=/a\sed -i '/DISTRIB_MY_TARGET/d' /etc/openwrt_relea
 sed -i "/DISTRIB_MY_TARGET/a\echo \"DISTRIB_MY_TARGET=\'$MY_BUILD_TARGET\'\" >> /etc/openwrt_release" package/default-settings/files/zzz-default-settings
 
 rm -rf package/base-files/files/etc/banner
-cp $GITHUB_WORKSPACE/Lienol/devices/common/banner package/base-files/files/etc/
+cp $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/banner package/base-files/files/etc/
 
 rm -rf package/feeds/luci/luci-theme-argon/htdocs/luci-static/argon/favicon.ico
 rm -rf package/feeds/luci/luci-theme-argon/htdocs/luci-static/argon/img/argon.svg
@@ -32,6 +32,6 @@ rm -rf package/feeds/luci/luci-theme-argon/htdocs/luci-static/argon/icon/android
 rm -rf package/feeds/luci/luci-theme-argon/htdocs/luci-static/argon/icon/apple-icon-*.png
 rm -rf package/feeds/luci/luci-theme-argon/htdocs/luci-static/argon/icon/favicon-*.png
 rm -rf package/feeds/luci/luci-theme-argon/htdocs/luci-static/argon/icon/ms-icon-*.png
-cp $GITHUB_WORKSPACE/Lienol/devices/common/argon/favicon.ico package/feeds/luci/luci-theme-argon/htdocs/luci-static/argon/
-cp $GITHUB_WORKSPACE/Lienol/devices/common/argon/argon.svg package/feeds/luci/luci-theme-argon/htdocs/luci-static/argon/img/
-cp $GITHUB_WORKSPACE/Lienol/devices/common/argon/icon/* package/feeds/luci/luci-theme-argon/htdocs/luci-static/argon/icon/
+cp $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/argon/favicon.ico package/feeds/luci/luci-theme-argon/htdocs/luci-static/argon/
+cp $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/argon/argon.svg package/feeds/luci/luci-theme-argon/htdocs/luci-static/argon/img/
+cp $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/argon/icon/* package/feeds/luci/luci-theme-argon/htdocs/luci-static/argon/icon/

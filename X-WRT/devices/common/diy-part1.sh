@@ -80,7 +80,7 @@ echo -e 'msgid "Traffic Priority"' >>feeds/luci/applications/luci-app-nft-qos/po
 echo -e 'msgstr "流量優先權"' >>feeds/luci/applications/luci-app-nft-qos/po/zh_Hant/nft-qos.po
 
 mkdir -p feeds/luci/modules/luci-base/patches
-cp $GITHUB_WORKSPACE/xwrt/devices/common/patches/luci-base/* feeds/luci/modules/luci-base/patches
+cp $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/patches/luci-base/* feeds/luci/modules/luci-base/patches
 
 
 sed -i "s|dropbear.@dropbear[0].PasswordAuth='off'|dropbear.@dropbear[0].PasswordAuth='on'|g" feeds/x/base-config-setting/files/uci.defaults
@@ -97,10 +97,10 @@ sed -i "/DISTRIB_MY_TARGET/a\echo \"DISTRIB_MY_TARGET=\'$MY_BUILD_TARGET\'\" >> 
 rm -rf feeds/x/luci-app-wizard
 git_sparse_clone master "https://github.com/kiddin9/openwrt-packages" "feeds/x/wizard_luci" luci-app-wizard
 mkdir -p feeds/x/luci-app-wizard/patches
-cp $GITHUB_WORKSPACE/xwrt/devices/common/patches/luci-app-wizard/* feeds/x/luci-app-wizard/patches
+cp $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/patches/luci-app-wizard/* feeds/x/luci-app-wizard/patches
 
 rm -rf feeds/x/luci-app-natcap/files/luci/controller/natcap.lua
-cp $GITHUB_WORKSPACE/xwrt/devices/common/packages/luci-app-natcap/natcap.lua feeds/x/luci-app-natcap/files/luci/controller/
+cp $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/packages/luci-app-natcap/natcap.lua feeds/x/luci-app-natcap/files/luci/controller/
 sed -i 's|Map("natcapd", luci.xml.pcdata(translate("Advanced Options")))|Map("natcapd", luci.xml.pcdata(translate("Fast NAT Forwarding")))|g' feeds/x/luci-app-natcap/files/luci/model/cbi/natcap/natcapd_sys.lua
 sed -i 's|s:tab("system", translate("System Settings"))|-- s:tab("system", translate("System Settings"))|g' feeds/x/luci-app-natcap/files/luci/model/cbi/natcap/natcapd_sys.lua
 sed -i 's|s:taboption("system", Flag,|s:option(Flag,|g' feeds/x/luci-app-natcap/files/luci/model/cbi/natcap/natcapd_sys.lua
@@ -113,7 +113,7 @@ rm -rf feeds/x/*/.svn
 rm -rf feeds/x/*/.github
 rm -rf feeds/x/*/.gitignore
 
-chmod +x $GITHUB_WORKSPACE/xwrt/devices/common/convert_translation.sh
-bash $GITHUB_WORKSPACE/xwrt/devices/common/convert_translation.sh -a >/dev/null 2>&1
+chmod +x $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/convert_translation.sh
+bash $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/convert_translation.sh -a >/dev/null 2>&1
 
 exit 0
