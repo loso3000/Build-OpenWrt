@@ -23,9 +23,13 @@ on:
         - Lienol-Openwrt
         - X-WRT
       test:
-        description: 'if test?'
+        description: '是否测试'
         required: false
         default: 'false'
+        type: choice
+        options:
+        - false
+        - true
 
 jobs:
   check:
