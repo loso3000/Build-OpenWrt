@@ -7,9 +7,21 @@ on:
   workflow_dispatch:
     inputs:
       target:
-        description: 'build target'
+        description: '选择机型'
         required: true
         default: 'x86_64'
+        type: choice
+        options:
+        - x86_64
+        - mi-ac2100
+      manufacturer:
+        description: '选择Openwrt类型'
+        required: true
+        default: 'Lienol-Openwrt'
+        type: choice
+        options:
+        - Lienol-Openwrt
+        - X-WRT
       test:
         description: 'if test?'
         required: false
@@ -18,15 +30,20 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
-    name: Manual build ${{matrix.target}}
+    name: Manual build ${{ github.event.inputs.target }} ${{github.event.inputs.manufacturer}}
 
     steps:
     - name: Get latest tag
       id: getTag
       run: |
-        latestTag="$((curl -gs -H 'Content-Type: application/json' \
+        if [ ${{github.event.inputs.manufacturer}} == "X-WRT" ]
+        then
+          latestTag="$((curl -gs -H 'Content-Type: application/json' \
           -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}" \
           -X POST -d '{ "query": "query {repository(owner: \"x-wrt\", name: \"x-wrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep '22.' | tail -n 1)"
+        else
+          latestTag="22.03"
+        fi
         echo "::set-output name=latestTag::${latestTag}"
         echo "latestTag: $latestTag"
 
@@ -35,7 +52,7 @@ jobs:
       uses: peter-evans/repository-dispatch@v2
       with:
         token: ${{ secrets.ACCESS_TOKEN }}
-        event-type: build X-WRT ${{ github.event.inputs.target }} ${{ steps.getTag.outputs.latestTag }}
+        event-type: build ${{ github.event.inputs.target }} ${{ github.event.inputs.manufacturer }} ${{ steps.getTag.outputs.latestTag }}
         client-payload: '{"branch": "${{ steps.getTag.outputs.latestTag }}", "target": "${{ github.event.inputs.target }}", "test": "false"}'
     
     - name: Trigger test
@@ -43,7 +60,7 @@ jobs:
       uses: peter-evans/repository-dispatch@v2
       with:
         token: ${{ secrets.ACCESS_TOKEN }}
-        event-type: test X-WRT ${{ github.event.inputs.target }} ${{ steps.getTag.outputs.latestTag }}
+        event-type: test ${{ github.event.inputs.target }} ${{ github.event.inputs.manufacturer }} ${{ steps.getTag.outputs.latestTag }}
         client-payload: '{"branch": "${{ steps.getTag.outputs.latestTag }}", "target": "${{ github.event.inputs.target }}", "test": "true"}'
         
     - name: Delete workflow runs

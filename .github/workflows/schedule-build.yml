@@ -20,6 +20,7 @@ jobs:
         latestTag="$((curl -gs -H 'Content-Type: application/json' \
           -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}" \
           -X POST -d '{ "query": "query {repository(owner: \"x-wrt\", name: \"x-wrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep '22.' | tail -n 1)"
+        latestTag="22.03"
         echo "::set-output name=latestTag::${latestTag}"
         echo "::set-output name=success::true"
         echo "latestTag: $latestTag"
@@ -32,13 +33,13 @@ jobs:
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
-          -d '{"event_type": "X-WRT x86_64 ${{steps.getTag.outputs.latestTag}}", "client_payload": {"target": "x86_64", "branch": "${{steps.getTag.outputs.latestTag}}"}}'
+          -d '{"event_type": "Lienol-Openwrt x86_64 ${{steps.getTag.outputs.latestTag}}", "client_payload": {"target": "x86_64", "branch": "${{steps.getTag.outputs.latestTag}}"}}'
           sleep 10
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
-          -d '{"event_type": "X-WRT mi-ac2100 ${{steps.getTag.outputs.latestTag}}", "client_payload": {"target": "mi-ac2100", "branch": "${{steps.getTag.outputs.latestTag}}"}}'
+          -d '{"event_type": "Lienol-Openwrt mi-ac2100 ${{steps.getTag.outputs.latestTag}}", "client_payload": {"target": "mi-ac2100", "branch": "${{steps.getTag.outputs.latestTag}}"}}'
         
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2

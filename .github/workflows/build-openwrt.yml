@@ -1,4 +1,4 @@
-name: Build X-WRT
+name: Build Openwrt
 
 on:
   repository_dispatch:
@@ -16,7 +16,7 @@ jobs:
       matrix:
         branch: ["${{ github.event.client_payload.branch }}"]
         target: ["${{ github.event.client_payload.target }}"]
-        manufacturer: ["X-WRT"]
+        manufacturer: ["${{ github.event.client_payload.manufacturer }}"]
 
     steps:
     - name: Checkout
@@ -24,9 +24,9 @@ jobs:
       
     - name: Load Settings.ini
       run: |
-        source "xwrt/devices/common/settings.ini"
-        if [ -f "xwrt/devices/${{matrix.target}}/settings.ini" ]; then
-          source "xwrt/devices/${{matrix.target}}/settings.ini"
+        source "${{matrix.manufacturer}}/devices/common/settings.ini"
+        if [ -f "${{matrix.manufacturer}}/devices/${{matrix.target}}/settings.ini" ]; then
+          source "${{matrix.manufacturer}}/devices/${{matrix.target}}/settings.ini"
         fi
         current_date=$(date +"%Y.%m.%d")
         echo "RELEASE_CODE=v${current_date}" >> $GITHUB_ENV
@@ -53,7 +53,7 @@ jobs:
           curl -X POST https://api.github.com/repos/zhuxiaole/OpenWrt-Packages/dispatches \
             -H "Accept: application/vnd.github.everest-preview+json" \
             -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
-          --data '{"event_type": "update by build firmware", "client_payload": {"target": "x-wrt"}}'
+          --data '{"event_type": "update by build firmware", "client_payload": {"target": "${OP_MANUFACTURER}"}}'
         fi
 
     - name: Initialization environment
@@ -79,12 +79,12 @@ jobs:
     - name: Load custom feeds
       run: |
         cd openwrt
-        chmod +x $GITHUB_WORKSPACE/xwrt/devices/common/$DIY_FEEDS_SH
-        $GITHUB_WORKSPACE/xwrt/devices/common/$DIY_FEEDS_SH
-        if [ -e $GITHUB_WORKSPACE/xwrt/devices/${{matrix.target}}/$DIY_FEEDS_SH ]
+        chmod +x $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/$DIY_FEEDS_SH
+        $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/$DIY_FEEDS_SH
+        if [ -e $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/${{matrix.target}}/$DIY_FEEDS_SH ]
         then
-          chmod +x $GITHUB_WORKSPACE/xwrt/devices/${{matrix.target}}/$DIY_FEEDS_SH
-          $GITHUB_WORKSPACE/xwrt/devices/${{matrix.target}}/$DIY_FEEDS_SH
+          chmod +x $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/${{matrix.target}}/$DIY_FEEDS_SH
+          $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/${{matrix.target}}/$DIY_FEEDS_SH
         fi
 
     - name: Update feeds
@@ -93,12 +93,12 @@ jobs:
     - name: Load custom feeds packages
       run: |
         cd openwrt
-        chmod +x $GITHUB_WORKSPACE/xwrt/devices/common/$DIY_P1_SH
-        $GITHUB_WORKSPACE/xwrt/devices/common/$DIY_P1_SH
-        if [ -e $GITHUB_WORKSPACE/xwrt/devices/${{matrix.target}}/$DIY_P1_SH ]
+        chmod +x $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/$DIY_P1_SH
+        $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/$DIY_P1_SH
+        if [ -e $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/${{matrix.target}}/$DIY_P1_SH ]
         then
-          chmod +x $GITHUB_WORKSPACE/xwrt/devices/${{matrix.target}}/$DIY_P1_SH
-          $GITHUB_WORKSPACE/xwrt/devices/${{matrix.target}}/$DIY_P1_SH
+          chmod +x $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/${{matrix.target}}/$DIY_P1_SH
+          $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/${{matrix.target}}/$DIY_P1_SH
         fi
 
     - name: Install feeds
@@ -106,17 +106,17 @@ jobs:
 
     - name: Load custom configuration
       run: |
-        if [ -e xwrt/devices/${{matrix.target}}/$CONFIG_FILE ]
+        if [ -e $OP_MANUFACTURER/devices/${{matrix.target}}/$CONFIG_FILE ]
         then
-          mv -f xwrt/devices/${{matrix.target}}/$CONFIG_FILE openwrt/.config
+          mv -f $OP_MANUFACTURER/devices/${{matrix.target}}/$CONFIG_FILE openwrt/.config
         fi
         cd openwrt
-        chmod +x $GITHUB_WORKSPACE/xwrt/devices/common/$DIY_P2_SH
-        $GITHUB_WORKSPACE/xwrt/devices/common/$DIY_P2_SH
-        if [ -e $GITHUB_WORKSPACE/xwrt/devices/${{matrix.target}}/$DIY_P2_SH ]
+        chmod +x $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/$DIY_P2_SH
+        $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/$DIY_P2_SH
+        if [ -e $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/${{matrix.target}}/$DIY_P2_SH ]
         then
-          chmod +x $GITHUB_WORKSPACE/xwrt/devices/${{matrix.target}}/$DIY_P2_SH
-          $GITHUB_WORKSPACE/xwrt/devices/${{matrix.target}}/$DIY_P2_SH
+          chmod +x $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/${{matrix.target}}/$DIY_P2_SH
+          $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/${{matrix.target}}/$DIY_P2_SH
         fi
         
     - name: SSH connection to Actions
