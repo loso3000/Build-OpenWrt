@@ -33,13 +33,13 @@ jobs:
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
-          -d '{"event_type": "Lienol-Openwrt x86_64 ${{steps.getTag.outputs.latestTag}}", "client_payload": {"target": "x86_64", "branch": "${{steps.getTag.outputs.latestTag}}"}}'
+          -d '{"event_type": "Lienol-Openwrt x86_64 ${{steps.getTag.outputs.latestTag}}", "client_payload": {"manufacturer": "Lienol-Openwrt", "target": "x86_64", "branch": "${{steps.getTag.outputs.latestTag}}}}'
           sleep 10
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
-          -d '{"event_type": "Lienol-Openwrt mi-ac2100 ${{steps.getTag.outputs.latestTag}}", "client_payload": {"target": "mi-ac2100", "branch": "${{steps.getTag.outputs.latestTag}}"}}'
+          -d '{"event_type": "Lienol-Openwrt mi-ac2100 ${{steps.getTag.outputs.latestTag}}", "client_payload": {"manufacturer": "Lienol-Openwrt", "target": "mi-ac2100", "branch": "${{steps.getTag.outputs.latestTag}}"}}'
         
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2

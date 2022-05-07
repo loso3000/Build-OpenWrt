@@ -53,7 +53,7 @@ jobs:
       with:
         token: ${{ secrets.ACCESS_TOKEN }}
         event-type: build ${{ github.event.inputs.target }} ${{ github.event.inputs.manufacturer }} ${{ steps.getTag.outputs.latestTag }}
-        client-payload: '{"branch": "${{ steps.getTag.outputs.latestTag }}", "target": "${{ github.event.inputs.target }}", "test": "false"}'
+        client-payload: '{"manufacturer": "${{ github.event.inputs.manufacturer }}", "branch": "${{ steps.getTag.outputs.latestTag }}", "target": "${{ github.event.inputs.target }}", "test": "false"}'
     
     - name: Trigger test
       if: github.event.inputs.test == 'true'
@@ -61,7 +61,7 @@ jobs:
       with:
         token: ${{ secrets.ACCESS_TOKEN }}
         event-type: test ${{ github.event.inputs.target }} ${{ github.event.inputs.manufacturer }} ${{ steps.getTag.outputs.latestTag }}
-        client-payload: '{"branch": "${{ steps.getTag.outputs.latestTag }}", "target": "${{ github.event.inputs.target }}", "test": "true"}'
+        client-payload: '{"manufacturer": "${{ github.event.inputs.manufacturer }}", "branch": "${{ steps.getTag.outputs.latestTag }}", "target": "${{ github.event.inputs.target }}", "test": "true"}'
         
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
