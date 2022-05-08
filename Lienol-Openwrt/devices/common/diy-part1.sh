@@ -11,6 +11,9 @@ cd $GITHUB_WORKSPACE/openwrt
 rm -rf $localdir
 }
 
+rm -rf feeds/packages/net/frp
+git clone --depth 1 https://github.com/kuoruan/openwrt-frp feeds/packages/net/frp
+
 rm -rf feeds/packages/net/adguardhome
 git_sparse_clone main "https://github.com/kenzok8/small-package" "feeds/packages/net/adguardhome_pkg" adguardhome
 
@@ -67,6 +70,16 @@ cp $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/patches/luci-base/* feeds/l
 
 rm -rf feeds/other/luci-app-adguardhome
 git_sparse_clone main "https://github.com/kenzok8/small-package" "feeds/other/adguardhome_luci" luci-app-adguardhome
+
+rm -rf feeds/other/lean/luci-app-autoreboot
+git_sparse_clone 22.03 "https://github.com/x-wrt/com.x-wrt" "feeds/other/lean/autoreboot_luci" luci-app-autoreboot
+
+rm -rf feeds/luci/applications/luci-app-frpc
+rm -rf feeds/luci/applications/luci-app-frps
+rm -rf feeds/other/lean/luci-app-frpc
+rm -rf feeds/other/lean/luci-app-frps
+git_sparse_clone master "https://github.com/kiddin9/openwrt-packages" "feeds/luci/applications/frpc_luci" luci-app-frpc
+git_sparse_clone master "https://github.com/kiddin9/openwrt-packages" "feeds/luci/applications/frps_luci" luci-app-frps
 
 
 chmod +x $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/convert_translation.sh
