@@ -17,6 +17,11 @@ git_sparse_clone main "https://github.com/kenzok8/small-package" "feeds/packages
 rm -rf feeds/packages/net/xray-core
 git_sparse_clone packages "https://github.com/xiaorouji/openwrt-passwall" "feeds/packages/net/xray_core_pkg" xray-core
 
+sed -i 's|$(INSTALL_DIR) $(1)/etc/init.d|#$(INSTALL_DIR) $(1)/etc/init.d|' feeds/packages/sound/shairport-sync/Makefile
+sed -i 's|$(INSTALL_BIN) ./files/shairport-sync.init $(1)/etc/init.d/shairport-sync|#$(INSTALL_BIN) ./files/shairport-sync.init $(1)/etc/init.d/shairport-sync|' feeds/packages/sound/shairport-sync/Makefile
+sed -i 's|$(INSTALL_DIR) $(1)/etc/config|#$(INSTALL_DIR) $(1)/etc/config|' feeds/packages/sound/shairport-sync/Makefile
+sed -i 's|$(INSTALL_CONF) ./files/shairport-sync.config $(1)/etc/config/shairport-sync|#$(INSTALL_CONF) ./files/shairport-sync.config $(1)/etc/config/shairport-sync|' feeds/packages/sound/shairport-sync/Makefile
+
 
 rm -rf feeds/luci/applications/luci-app-dawn
 git_sparse_clone master "https://github.com/coolsnowwolf/luci" "feeds/luci/applications/dawn_luci" applications/luci-app-dawn
