@@ -11,6 +11,9 @@ cd $GITHUB_WORKSPACE/openwrt
 rm -rf $localdir
 }
 
+rm -rf feeds/packages/net/adguardhome
+rm -rf feeds/packages/net/xray-core
+
 rm -rf feeds/luci/applications/luci-app-dawn
 git_sparse_clone master "https://github.com/coolsnowwolf/luci" "feeds/luci/applications/dawn_luci" applications/luci-app-dawn
 
