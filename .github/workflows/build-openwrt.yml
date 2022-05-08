@@ -53,7 +53,7 @@ jobs:
           curl -X POST https://api.github.com/repos/zhuxiaole/OpenWrt-Packages/dispatches \
             -H "Accept: application/vnd.github.everest-preview+json" \
             -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
-          --data '{"event_type": "update by build firmware", "client_payload": {"target": "${{ matrix.manufacturer }}"}}'
+          --data '{"event_type": "update by build firmware", "client_payload": {"target": "${{matrix.manufacturer}}"}}'
         fi
 
     - name: Initialization environment
