@@ -12,7 +12,11 @@ rm -rf $localdir
 }
 
 rm -rf feeds/packages/net/adguardhome
+git_sparse_clone main "https://github.com/kenzok8/small-package" "feeds/packages/net/adguardhome_pkg" adguardhome
+
 rm -rf feeds/packages/net/xray-core
+git_sparse_clone packages "https://github.com/xiaorouji/openwrt-passwall" "feeds/packages/net/xray_core_pkg" xray-core
+
 
 rm -rf feeds/luci/applications/luci-app-dawn
 git_sparse_clone master "https://github.com/coolsnowwolf/luci" "feeds/luci/applications/dawn_luci" applications/luci-app-dawn
@@ -54,6 +58,10 @@ echo -e 'msgstr "流量優先權"' >>feeds/luci/applications/luci-app-nft-qos/po
 
 mkdir -p feeds/luci/modules/luci-base/patches
 cp $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/patches/luci-base/* feeds/luci/modules/luci-base/patches
+
+
+rm -rf feeds/other/luci-app-adguardhome
+git_sparse_clone main "https://github.com/kenzok8/small-package" "feeds/other/adguardhome_luci" luci-app-adguardhome
 
 
 chmod +x $GITHUB_WORKSPACE/$OP_MANUFACTURER/devices/common/convert_translation.sh
