@@ -18,7 +18,7 @@ sed -i "/CONFIG_VERSION_NUMBER=/a\CONFIG_VERSION_CODE=\"$RELEASE_CODE\"" .config
 sed -i "/CONFIG_VERSION_MANUFACTURER=/d" .config
 sed -i "/CONFIG_VERSION_CODE=/a\CONFIG_VERSION_MANUFACTURER=\"$OP_MANUFACTURER\"" .config
 
-sed -i "//etc\/opkg\/distfeeds.conf/d" package/default-settings/files/zzz-default-settings
+sed -i "/\/etc\/opkg\/distfeeds.conf/d" package/default-settings/files/zzz-default-settings
 sed -i "/DISTRIB_DESCRIPTION=/a\sed -i '/DISTRIB_GITHUB/d' /etc/openwrt_release" package/default-settings/files/zzz-default-settings
 sed -i "/DISTRIB_GITHUB/a\echo \"DISTRIB_GITHUB=\'https://github.com/zhuxiaole/Build-OpenWrt\'\" >> /etc/openwrt_release" package/default-settings/files/zzz-default-settings
 sed -i "/DISTRIB_DESCRIPTION=/a\sed -i '/DISTRIB_MY_TARGET/d' /etc/openwrt_release" package/default-settings/files/zzz-default-settings
