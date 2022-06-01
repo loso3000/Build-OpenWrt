@@ -32,19 +32,6 @@ jobs:
         token: ${{ secrets.ACCESS_TOKEN }}
         event-type: Lienol-Openwrt x86_64 ${{steps.getTag.outputs.latestTag}}
         client-payload: '{"manufacturer": "Lienol-Openwrt", "branch": "${{ steps.getTag.outputs.latestTag }}", "target": "x86_64"}'
-          
-    - name: Sleep 20 seconds
-      if: steps.getTag.outputs.success == 'true'
-      run: |
-         sleep 20
-         
-    - name: Trigger mi-ac2100 build
-      if: steps.getTag.outputs.success == 'true'
-      uses: peter-evans/repository-dispatch@v2
-      with:
-        token: ${{ secrets.ACCESS_TOKEN }}
-        event-type: Lienol-Openwrt mi-ac2100 ${{steps.getTag.outputs.latestTag}}
-        client-payload: '{"manufacturer": "Lienol-Openwrt", "branch": "${{ steps.getTag.outputs.latestTag }}", "target": "mi-ac2100"}'
         
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
