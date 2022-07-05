@@ -245,9 +245,18 @@ jobs:
         mkdir MyNetdrive
         cd MyNetdrive
         echo "latest_version:${{ env.RELEASE_CODE }}" > version.txt
-        cp ${{ env.FIRMWARE }}/*.bin ./
-        cp ${{ env.FIRMWARE }}/*.img.gz ./
-        cp ${{ env.FIRMWARE }}/*.manifest ./
+        if [ "$(ls ${{ env.FIRMWARE }}/*.bin 2> /dev/null | wc -l)" != "0" ]
+        then
+          cp ${{ env.FIRMWARE }}/*.bin ./
+        fi
+        if [ "$(ls ${{ env.FIRMWARE }}/*.img.gz 2> /dev/null | wc -l)" != "0" ]
+        then
+          cp ${{ env.FIRMWARE }}/*.img.gz ./
+        fi
+        if [ "$(ls ${{ env.FIRMWARE }}/*.manifest 2> /dev/null | wc -l)" != "0" ]
+        then
+          cp ${{ env.FIRMWARE }}/*.manifest ./
+        fi
         if [ "$(ls *squashfs-sysupgrade.bin 2> /dev/null | wc -l)" != "0" ]
         then
           download_url="https://pan.zhuxiaole.org/d/openwrt/firmware/${{matrix.manufacturer}}/${{matrix.target}}/$(ls *squashfs-sysupgrade.bin)"
