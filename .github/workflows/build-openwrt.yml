@@ -174,6 +174,12 @@ jobs:
         rm -rf packages
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
+        
+    - name: Generate updatelogs
+      id: updatelogs
+      run: |
+        updatelogs="基于${{matrix.manufacturer}}-${{matrix.branch}}编译"
+        echo "::set-output name=updatelogs::${updatelogs}"
 
     - name: Upload firmware directory
       uses: actions/upload-artifact@main
@@ -206,12 +212,10 @@ jobs:
       run: |
         release_tag="${{matrix.manufacturer}}|${{matrix.target}}|${{ env.RELEASE_CODE }}"
         release_name="${{matrix.manufacturer}} ${{matrix.target}} ${{ env.RELEASE_CODE }}"
-        release_body="基于${{matrix.manufacturer}}-${{matrix.branch}}编译"
         echo "::set-output name=release_tag::${release_tag}"
         echo "::set-output name=release_name::${release_name}"
-        echo "::set-output name=release_body::${release_body}"
         touch release.txt
-        echo ${release_body} >> release.txt
+        echo ${{ steps.updatelogs.outputs.updatelogs }} >> release.txt
         echo "::set-output name=status::success"
         
     - name: Remove same tag Releases
@@ -267,7 +271,7 @@ jobs:
         efi_md5=$((md5sum *squashfs-combined-efi*) | awk '{print $1}') 2>/dev/null
         echo "md5:${md5}" >> version.txt
         echo "efi_md5:${efi_md5}" >> version.txt
-        echo ${{ steps.tag.outputs.release_body }} > updatelogs.txt
+        echo ${{ steps.updatelogs.outputs.updatelogs }} > updatelogs.txt
         
     - name: Upload firmware to MyNetdrive
       if: github.event.client_payload.test != 'true' && steps.organize.outputs.status == 'success' && env.UPLOAD_MY_NETDRIVE == 'true' && !cancelled()
