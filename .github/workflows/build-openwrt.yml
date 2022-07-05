@@ -240,34 +240,30 @@ jobs:
         mkdir MyNetdrive
         cd MyNetdrive
         echo "latest_version:${{ env.RELEASE_CODE }}" > version.txt
-        if [ "$(ls ${{ env.FIRMWARE }}/*-kernel.bin 2> /dev/null | wc -l)" != "0" ]
+        cp ${{ env.FIRMWARE }}/*.bin ./
+        cp ${{ env.FIRMWARE }}/*.img.gz ./
+        cp ${{ env.FIRMWARE }}/*.manifest ./
+        if [ "$(ls *squashfs-sysupgrade.bin 2> /dev/null | wc -l)" != "0" ]
         then
-          cp ${{ env.FIRMWARE }}/*-kernel.bin ./
-        fi
-        if [ "$(ls ${{ env.FIRMWARE }}/*squashfs-sysupgrade.bin 2> /dev/null | wc -l)" != "0" ]
-        then
-          cp ${{ env.FIRMWARE }}/*squashfs-sysupgrade.bin ./
           download_url="https://pan.zhuxiaole.org/d/openwrt/firmware/${{matrix.manufacturer}}/${{matrix.target}}/$(ls *squashfs-sysupgrade.bin)"
         else
-          if [ "$(ls ${{ env.FIRMWARE }}/*squashfs-combined.img.gz 2> /dev/null | wc -l)" != "0" ]
+          if [ "$(ls *squashfs-combined.img.gz 2> /dev/null | wc -l)" != "0" ]
           then
-            cp ${{ env.FIRMWARE }}/*squashfs-combined.img.gz ./
             download_url="https://pan.zhuxiaole.org/d/openwrt/firmware/${{matrix.manufacturer}}/${{matrix.target}}/$(ls *squashfs-combined.img.gz)"
           else
             download_url=""
           fi
         fi
-        if [ "$(ls ${{ env.FIRMWARE }}/*squashfs-combined-efi.img.gz 2> /dev/null | wc -l)" != "0" ]
+        if [ "$(ls *squashfs-combined-efi.img.gz 2> /dev/null | wc -l)" != "0" ]
         then
-          cp ${{ env.FIRMWARE }}/*squashfs-combined-efi.img.gz ./
           efi_download_url="https://pan.zhuxiaole.org/d/openwrt/firmware/${{matrix.manufacturer}}/${{matrix.target}}/$(ls *squashfs-combined-efi.img.gz)"
         else
           efi_download_url=""
         fi
         echo "download_url:${download_url}" >> version.txt
         echo "efi_download_url:${efi_download_url}" >> version.txt
-        md5=$((md5sum ${{ env.FIRMWARE }}/*squashfs-sysupgrade* || md5sum ${{ env.FIRMWARE }}/*squashfs-combined.img*) | awk '{print $1}') 2>/dev/null
-        efi_md5=$((md5sum ${{ env.FIRMWARE }}/*squashfs-combined-efi*) | awk '{print $1}') 2>/dev/null
+        md5=$((md5sum *squashfs-sysupgrade* || md5sum *squashfs-combined.img*) | awk '{print $1}') 2>/dev/null
+        efi_md5=$((md5sum *squashfs-combined-efi*) | awk '{print $1}') 2>/dev/null
         echo "md5:${md5}" >> version.txt
         echo "efi_md5:${efi_md5}" >> version.txt
         echo ${{ steps.tag.outputs.release_body }} > updatelogs.txt
