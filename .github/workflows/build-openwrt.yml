@@ -43,6 +43,7 @@ jobs:
         echo "UPLOAD_COWTRANSFER=${UPLOAD_COWTRANSFER}" >> $GITHUB_ENV
         echo "UPLOAD_WETRANSFER=${UPLOAD_WETRANSFER}" >> $GITHUB_ENV
         echo "UPLOAD_RELEASE=${UPLOAD_RELEASE}" >> $GITHUB_ENV
+        echo "UPLOAD_MY_NETDRIVE=${UPLOAD_MY_NETDRIVE}" >> $GITHUB_ENV
 
     - name: Trigger Packages Update
       uses: peter-evans/repository-dispatch@v2
