@@ -238,59 +238,6 @@ jobs:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
-        
-    - name: Prepare upload firmware to MyNetdrive
-      if: github.event.client_payload.test != 'true' && steps.organize.outputs.status == 'success' && env.UPLOAD_MY_NETDRIVE == 'true' && !cancelled()
-      run: |
-        mkdir MyNetdrive
-        cd MyNetdrive
-        echo "latest_version:${{ env.RELEASE_CODE }}" > version.txt
-        if [ "$(ls ${{ env.FIRMWARE }}/*.bin 2> /dev/null | wc -l)" != "0" ]
-        then
-          cp ${{ env.FIRMWARE }}/*.bin ./
-        fi
-        if [ "$(ls ${{ env.FIRMWARE }}/*.img.gz 2> /dev/null | wc -l)" != "0" ]
-        then
-          cp ${{ env.FIRMWARE }}/*.img.gz ./
-        fi
-        if [ "$(ls ${{ env.FIRMWARE }}/*.manifest 2> /dev/null | wc -l)" != "0" ]
-        then
-          cp ${{ env.FIRMWARE }}/*.manifest ./
-        fi
-        if [ "$(ls *squashfs-sysupgrade.bin 2> /dev/null | wc -l)" != "0" ]
-        then
-          download_url="https://pan.zhuxiaole.org/d/openwrt/firmware/${{matrix.manufacturer}}/${{matrix.target}}/$(ls *squashfs-sysupgrade.bin)"
-        else
-          if [ "$(ls *squashfs-combined.img.gz 2> /dev/null | wc -l)" != "0" ]
-          then
-            download_url="https://pan.zhuxiaole.org/d/openwrt/firmware/${{matrix.manufacturer}}/${{matrix.target}}/$(ls *squashfs-combined.img.gz)"
-          else
-            download_url=""
-          fi
-        fi
-        if [ "$(ls *squashfs-combined-efi.img.gz 2> /dev/null | wc -l)" != "0" ]
-        then
-          efi_download_url="https://pan.zhuxiaole.org/d/openwrt/firmware/${{matrix.manufacturer}}/${{matrix.target}}/$(ls *squashfs-combined-efi.img.gz)"
-        else
-          efi_download_url=""
-        fi
-        echo "download_url:${download_url}" >> version.txt
-        echo "efi_download_url:${efi_download_url}" >> version.txt
-        md5=$((md5sum *squashfs-sysupgrade* || md5sum *squashfs-combined.img*) | awk '{print $1}') 2>/dev/null
-        efi_md5=$((md5sum *squashfs-combined-efi*) | awk '{print $1}') 2>/dev/null
-        echo "md5:${md5}" >> version.txt
-        echo "efi_md5:${efi_md5}" >> version.txt
-        echo ${{ steps.updatelogs.outputs.updatelogs }} > updatelogs.txt
-        
-    - name: Upload firmware to MyNetdrive
-      if: github.event.client_payload.test != 'true' && steps.organize.outputs.status == 'success' && env.UPLOAD_MY_NETDRIVE == 'true' && !cancelled()
-      uses: bxb100/action-upload-webdav@v1
-      with:
-        webdav_address: ${{ secrets.WEBDAV_ADDRESS }}
-        webdav_username: ${{ secrets.WEBDAV_USERNAME }}
-        webdav_password: ${{ secrets.WEBDAV_PASSWORD }}
-        webdav_upload_path: "/openwrt/firmware/${{matrix.manufacturer}}/${{matrix.target}}/"
-        files: "MyNetdrive/**"
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
