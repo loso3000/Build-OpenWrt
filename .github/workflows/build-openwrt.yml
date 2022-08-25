@@ -45,14 +45,6 @@ jobs:
         echo "UPLOAD_RELEASE=${UPLOAD_RELEASE}" >> $GITHUB_ENV
         echo "UPLOAD_MY_NETDRIVE=${UPLOAD_MY_NETDRIVE}" >> $GITHUB_ENV
 
-    - name: Trigger Packages Update
-      uses: peter-evans/repository-dispatch@v2
-      with:
-        token: ${{ secrets.ACCESS_TOKEN }}
-        repository: zhuxiaole/OpenWrt-Packages
-        event-type: update by build firmware
-        client-payload: '{"target": "${{ matrix.manufacturer }}"}'
-
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
