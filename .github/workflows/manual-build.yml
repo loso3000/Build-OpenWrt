@@ -14,6 +14,7 @@ on:
         options:
         - x86_64
         - mi-ac2100
+        - mi-r3
       manufacturer:
         description: '选择Openwrt类型'
         required: true
